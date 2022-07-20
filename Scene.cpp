@@ -18,28 +18,40 @@ void Scene::afficherContenu(sf::RenderWindow* fenetre, sf::Vector2f echelle) {
 }
 
 Scene* Scene::interactionContenu(sf::Vector2i souris, bool clic, Inventaire* inventaire) {
-	if (quete != nullptr) quete->interactionSouris(souris, clic);
 	Decor* decor;
-	Quete* _quete;
-	for (int i = 0; i < decors.size(); i++) {
-		decor = decors[i];
-		_quete = decor->interactionSouris(souris, clic);
-		if (_quete != nullptr) {
-			quete = _quete;
+	if (quete == nullptr) {
+		Quete* _quete;
+		for (int i = 0; i < decors.size(); i++) {
+			decor = decors[i];
+			_quete = decor->interactionSouris(souris, clic);
+			if (_quete != nullptr) quete = _quete;
+		}
+		Ramassable* ramassable;
+		for (int i = 0; i < ramassables.size(); i++) {
+			ramassable = ramassables[i];
+			if (ramassable->interactionSouris(souris, clic)) {
+				retirerRamassable(ramassable);
+				inventaire->ajouterRamassable(ramassable);
+			}
+		}
+		Scene* suivant;
+		for (int i = 0; i < fleches.size(); i++) {
+			suivant = fleches[i]->interactionSouris(souris, clic);
+			if (suivant != nullptr) return suivant;
 		}
 	}
-	Ramassable* ramassable;
-	for (int i = 0; i < ramassables.size(); i++) {
-		ramassable = ramassables[i];
-		if (ramassable->interactionSouris(souris, clic)) {
-			retirerRamassable(ramassable);
-			inventaire->ajouterRamassable(ramassable);
+	else {
+		std::string resultat = quete->interactionSouris(souris, clic);
+		if (resultat != "") {
+			if (resultat == "fermer") quete = nullptr;
+			else if (resultat == "fantome") {
+				if (inventaire->contient("baton")) {
+					progression->activerClee("fantome");
+					inventaire->retirerRamassable("baton");
+					quete = nullptr;
+				}
+			}
 		}
-	}
-	Scene* suivant;
-	for (int i = 0; i < fleches.size(); i++) {
-		suivant = fleches[i]->interactionSouris(souris, clic);
-		if (suivant != nullptr) return suivant;
 	}
 	return this;
 }
@@ -62,6 +74,15 @@ void Scene::retirerRamassable(Ramassable* ramassable) {
 
 void Scene::ajouterDecor(Decor* decor) {
 	decors.push_back(decor);
+}
+
+void Scene::retirerDecor(std::string nom) {
+	for (int i = 0; i < decors.size(); i++) {
+		if (decors[i]->getNom() == nom) {
+			decors.erase(decors.begin() + i);
+			return;
+		}
+	}
 }
 
 void Scene::ajouterQuete(Quete* _quete) {

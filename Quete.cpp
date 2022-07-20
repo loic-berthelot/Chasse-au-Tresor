@@ -7,13 +7,17 @@ void Quete::ajouterBouton(Bouton* bouton) {
 
 void Quete::afficher(sf::RenderWindow * fenetre) {
 	fenetre->draw(sprite);
+	fenetre->draw(imageTexte);
 	for (int i = 0; i < boutons.size(); i++) {
 		boutons[i]->afficher(fenetre, position);
 	}
 }
 
-void Quete::interactionSouris(sf::Vector2i souris, bool clic) {
+std::string Quete::interactionSouris(sf::Vector2i souris, bool clic) {
+	Bouton* bouton;
 	for (int i = 0; i < boutons.size(); i++) {
-		boutons[i]->interactionSouris(souris, clic);
+		bouton = boutons[i];
+		if (bouton->interactionSouris(souris, clic)) return bouton->getNom();
 	}
+	return "";
 }

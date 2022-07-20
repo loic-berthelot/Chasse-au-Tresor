@@ -8,6 +8,7 @@ protected:
 	sf::Texture texture;
 	float rayon, coefTaille;
 	std::string nom;
+	int etatClic = 0;
 public:
 	Objet() {}
 	void creerSprite(std::string adresse);
@@ -17,4 +18,5 @@ public:
 	void setCoefTaille(float _coefTaille);
 	void setPosition(sf::Vector2f _position);
 	sf::Sprite retournerSprite();
+	std::string getNom();
 };

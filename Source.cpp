@@ -9,7 +9,7 @@
 
 int largeurFenetre = 1280;
 int hauteurFenetre = 1024;
-sf::RenderWindow fenetre(sf::VideoMode(largeurFenetre, hauteurFenetre), "Chasse au Trésor");
+sf::RenderWindow fenetre;
 sf::Image image;
 sf::Sprite sprite;
 sf::Texture texture;
@@ -17,21 +17,44 @@ Scene* scene = nullptr;
 sf::Vector2f echelle;
 Inventaire* inventaire;
 Quete* quete;
+bool toucheEchapPressee = false;
+bool pleinEcran = true;
+int largeurInventaire;
+Progression* progression;
+std::vector<Scene*> scenes;
+
+Scene* getScene(std::string nom) {
+	for (int i = 0; i < scenes.size(); i++) {
+		if (scenes[i]->getNom() == nom) return scenes[i];
+	}
+}
 
 void chargerScene(Scene* _scene) {
-	if (_scene != scene) {
+	if (_scene != scene or progression->comporteNouveautes()) {
 		scene = _scene;
+		if (scene->getNom() == "scene2") {
+			if (progression->cleeActive("fantome")) {
+				scene->ajouterFleche(new Fleche(getScene("scene3"), sf::Vector2f(100, 250), -40));
+				scene->retirerDecor("fantome");
+				progression->utiliserClee("fantome");
+			}
+		} 
+		progression->setNouveautes(false);
+
 		image.loadFromFile("images/scenes/"+scene->getNom()+".png");
 		texture.loadFromImage(image);
 		sprite.setTexture(texture);
 		sf::Vector2f taille = sf::Vector2f(texture.getSize().x, texture.getSize().y);
-		echelle = sf::Vector2f(largeurFenetre/taille.x, hauteurFenetre/taille.y);
-		sprite.setScale(echelle.x, echelle.y);
+		echelle = sf::Vector2f((largeurFenetre-largeurInventaire)/taille.x, hauteurFenetre/taille.y);
+		sprite.setScale(echelle.x, echelle.y);	
 	}
-	
 }
 
 void initialisation() {
+	progression = new Progression();
+	largeurInventaire = 250;
+	fenetre.create(sf::VideoMode(largeurFenetre, hauteurFenetre), "Chasse au Trésor", sf::Style::Fullscreen);
+
 	std::vector<Fleche*> fleches;
 
 	Scene* scene1 = new Scene("scene1");
@@ -45,10 +68,10 @@ void initialisation() {
 	scene3->ajouterFleche(new Fleche(scene4, sf::Vector2f(600, 400), 0, 1, "loupe"));
 	scene4->ajouterFleche(new Fleche(scene3, sf::Vector2f(50, 50), 0, 2, "croix1"));
 	scene4->ajouterRamassable(new Ramassable("baton", sf::Vector2f(400, 400)));
-	scene2->ajouterDecor(new Decor("fantome", sf::Vector2f(200, 400)));
+	scene2->ajouterDecor(new Decor("fantome", sf::Vector2f(200, 400), sf::Vector2f(largeurFenetre, hauteurFenetre)));
 	chargerScene(scene1);
 
-	inventaire = new Inventaire(sf::Vector2f(250, hauteurFenetre));
+	inventaire = new Inventaire(sf::Vector2f(largeurInventaire, hauteurFenetre));
 }
 
 int main() { 
@@ -63,13 +86,27 @@ int main() {
 				fenetre.close();
 				return 0;
 			}
+			if (event.type == sf::Event::KeyPressed) {
+				if (event.key.code == sf::Keyboard::Escape) {
+					if (not toucheEchapPressee) {
+						toucheEchapPressee = true;
+						if (pleinEcran) fenetre.create(sf::VideoMode(largeurFenetre, hauteurFenetre), "Chasse au Trésor");
+						else fenetre.create(sf::VideoMode(largeurFenetre, hauteurFenetre), "Chasse au Trésor", sf::Style::Fullscreen);
+						pleinEcran = not pleinEcran;
+					}
+				}
+			} 
+			if (event.type == sf::Event::KeyReleased) {
+				if (event.key.code == sf::Keyboard::Escape) toucheEchapPressee = false;
+			}
 		}
 		sf::Vector2i souris = sf::Mouse::getPosition(fenetre);
 		bool clic = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
 		fenetre.draw(sprite);
-		chargerScene(scene->interactionContenu(souris, clic, inventaire));
+		Scene* _scene = scene->interactionContenu(souris, clic, inventaire);
+		chargerScene(_scene);
 		scene->afficherContenu(&fenetre, echelle);
-		inventaire->afficher(&fenetre, sf::Vector2f(largeurFenetre - 250, 0));
+		inventaire->afficher(&fenetre, sf::Vector2f(largeurFenetre - largeurInventaire, 0));
 		fenetre.display();
 		fenetre.clear();
 	}

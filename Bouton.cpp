@@ -10,12 +10,12 @@ void Bouton::afficher(sf::RenderWindow* fenetre, sf::Vector2f position) {
 }
 
 bool Bouton::interactionSouris(sf::Vector2i souris, bool clic) {
-	if (pointDansRectangle(sf::Vector2f(souris.x, souris.y), sprite.getGlobalBounds())) {
-		sprite.setScale(1.05, 1.05);
-		if (clic) return true;
-	}
-	else {
-		sprite.setScale(1, 1);
-	}
-	return false;
+	if (pointDansRectangle(sf::Vector2f(souris.x, souris.y), sprite.getGlobalBounds())) sprite.setScale(1.05, 1.05);
+	else sprite.setScale(1, 1);
+	progressionEtatsClic(etatClic, clic, pointDansRectangle(sf::Vector2f(souris.x, souris.y), sprite.getGlobalBounds()));
+	return (etatClic == 3);
+}
+
+std::string Bouton::getNom() {
+	return nom;
 }

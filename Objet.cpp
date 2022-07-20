@@ -17,14 +17,10 @@ void Objet::adapterEchelle(sf::Vector2f echelle) {
 }
 
 bool Objet::interactionSouris(sf::Vector2i souris, bool clic) {
-	if (distance(sprite.getPosition(), souris) < rayon) {
-		sprite.setScale(1.05 * coefTaille, 1.05 * coefTaille);
-		if (clic) return true;
-	}
-	else {
-		sprite.setScale(coefTaille, coefTaille);
-	}
-	return false;
+	if (distance(sprite.getPosition(), souris) < rayon) sprite.setScale(1.05 * coefTaille, 1.05 * coefTaille);
+	else sprite.setScale(coefTaille, coefTaille);
+	progressionEtatsClic(etatClic, clic, distance(sprite.getPosition(), souris) < rayon);
+	return etatClic == 3;
 }
 
 void Objet::setCoefTaille(float _coefTaille) {
@@ -37,4 +33,8 @@ void Objet::setPosition(sf::Vector2f _position) {
 
 sf::Sprite Objet::retournerSprite() {
 	return sprite;
+}
+
+std::string Objet::getNom() {
+	return nom;
 }
