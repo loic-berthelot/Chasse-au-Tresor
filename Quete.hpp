@@ -1,6 +1,6 @@
 #pragma once
 #include "General.hpp"
-#include "Bouton.hpp"
+#include "BarreSaisie.hpp"
 
 class Quete {
 	std::string nom;
@@ -27,6 +27,7 @@ public:
 		sf::FloatRect dimensionsSprite = sprite.getGlobalBounds();
 		if (nom == "fantome") {
 			ajouterBouton(new Bouton("fantome", "texte1", sf::Vector2f(60, dimensionsSprite.height - 35), "Bouh !"));
+			ajouterBouton(new BarreSaisie("barreFantome", sf::Vector2f(250, 200), sf::Vector2f(400, 50)));
 		}
 		police.loadFromFile("polices/arial_narrow_7.ttf");
 		imageTexte.setFont(police);
@@ -36,5 +37,6 @@ public:
 		imageTexte.setPosition(sf::Vector2f(position.x+10, position.y+50));
 	}
 	void afficher(sf::RenderWindow * fenetre);
-	std::string interactionSouris(sf::Vector2i souris, bool clic);
+	std::string interactionSouris(sf::Vector2i souris, bool clic, sf::Event* evenementTexte);
+	std::string getTexte(std::string _nom);
 };

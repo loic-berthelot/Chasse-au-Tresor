@@ -9,7 +9,7 @@ void Bouton::afficher(sf::RenderWindow* fenetre, sf::Vector2f position) {
 	fenetre->draw(imageTexte);
 }
 
-bool Bouton::interactionSouris(sf::Vector2i souris, bool clic) {
+bool Bouton::interactionSouris(sf::Vector2i souris, bool clic) {	
 	if (pointDansRectangle(sf::Vector2f(souris.x, souris.y), sprite.getGlobalBounds())) sprite.setScale(1.05, 1.05);
 	else sprite.setScale(1, 1);
 	progressionEtatsClic(etatClic, clic, pointDansRectangle(sf::Vector2f(souris.x, souris.y), sprite.getGlobalBounds()));
@@ -19,3 +19,27 @@ bool Bouton::interactionSouris(sf::Vector2i souris, bool clic) {
 std::string Bouton::getNom() {
 	return nom;
 }
+
+std::string Bouton::getType() {
+	return type;
+}
+
+std::string Bouton::getTexte() {
+	return texte;
+}
+
+void Bouton::changerType(std::string _type) {
+	type = _type;
+	sf::Image image;
+	image.loadFromFile("images/boutons/" + type + ".png");
+	texture.loadFromImage(image);
+	sprite.setTexture(texture);
+}
+
+void Bouton::changerTexte(std::string _texte) {
+	texte = _texte;
+	imageTexte.setString(texte);
+}
+
+void Bouton::selectionner(bool selection) {}
+void Bouton::reagirEntree(sf::Event* evenement) {}

@@ -4,25 +4,28 @@
 
 class Inventaire {
 	sf::Vector2f taille;
-	sf::RectangleShape sprite;
-	sf::Texture textureSprite;
+	sf::RectangleShape sprite, piece;
+	sf::Texture textureSprite, texturePiece;
 	sf::RectangleShape rectangle;
 	sf::Font police;
 	sf::Text imageTexte;
-	sf::CircleShape piece;
-	sf::Texture texturePiece;
 	std::vector<Ramassable*> ramassables;
 	int tailleCases = 50;
 	int places = 48;
-	int monnaie = 3;
+	int monnaie = 0;
 public:
 	Inventaire(sf::Vector2f _taille) {
 		taille = _taille;
 		sprite.setSize(taille);
 		sf::Image image;
+		image.loadFromFile("images/textures/monnaie.png");
+		texturePiece.loadFromImage(image);
+		piece.setTexture(&texturePiece);
+		piece.setSize(sf::Vector2f(50, 50));
+
 		image.loadFromFile("images/textures/inventaire.png");
 		textureSprite.loadFromImage(image);
-		sprite.setTexture(&texture);
+		sprite.setTexture(&textureSprite);		
 
 		rectangle.setFillColor(sf::Color::Transparent);
 		rectangle.setOutlineColor(sf::Color(200, 200, 200));
@@ -32,10 +35,8 @@ public:
 		police.loadFromFile("polices/arial_narrow_7.ttf");
 		imageTexte.setFont(police);
 		imageTexte.setString(std::to_string(monnaie));
-		imageTexte.setCharacterSize(24);
-		imageTexte.setFillColor(sf::Color(255, 255, 0));
-
-		p
+		imageTexte.setCharacterSize(36);
+		imageTexte.setFillColor(sf::Color(255, 255, 0));		
 	}
 	void afficher(sf::RenderWindow* fenetre, sf::Vector2f position);
 	void ajouterRamassable(Ramassable* ramassable);

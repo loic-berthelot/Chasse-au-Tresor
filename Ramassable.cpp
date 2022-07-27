@@ -6,3 +6,7 @@ void Ramassable::formaterCase(int tailleCases) {
 	else coefTaille *= 50/dimensions.height;
 	sprite.setScale(coefTaille, coefTaille);
 }
+
+bool Ramassable::estMonnaie() {
+	return monnaie;
+}

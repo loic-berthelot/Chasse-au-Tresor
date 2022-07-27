@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include "Scene.hpp"
 #include "Fleche.hpp"
@@ -16,12 +17,14 @@ sf::Texture texture;
 Scene* scene = nullptr;
 sf::Vector2f echelle;
 Inventaire* inventaire;
-Quete* quete;
 bool toucheEchapPressee = false;
 bool pleinEcran = true;
 int largeurInventaire;
 Progression* progression;
 std::vector<Scene*> scenes;
+sf::Music musique;
+Bouton* boutonSon;
+int clicFenetre;
 
 Scene* getScene(std::string nom) {
 	for (int i = 0; i < scenes.size(); i++) {
@@ -51,11 +54,16 @@ void chargerScene(Scene* _scene) {
 }
 
 void initialisation() {
+	musique.openFromFile("sounds/swan_lake.ogg");
+	musique.play();
+	musique.setLoop(true);
+
 	progression = new Progression();
 	largeurInventaire = 250;
 	fenetre.create(sf::VideoMode(largeurFenetre, hauteurFenetre), "Chasse au Trésor", sf::Style::Fullscreen);
+	inventaire = new Inventaire(sf::Vector2f(largeurInventaire, hauteurFenetre));
 
-	std::vector<Fleche*> fleches;
+	boutonSon = new Bouton("son", "sonOn", sf::Vector2f(30, 30));
 
 	Scene* scene1 = new Scene("scene1");
 	Scene* scene2 = new Scene("scene2");
@@ -69,9 +77,11 @@ void initialisation() {
 	scene4->ajouterFleche(new Fleche(scene3, sf::Vector2f(50, 50), 0, 2, "croix1"));
 	scene4->ajouterRamassable(new Ramassable("baton", sf::Vector2f(400, 400)));
 	scene2->ajouterDecor(new Decor("fantome", sf::Vector2f(200, 400), sf::Vector2f(largeurFenetre, hauteurFenetre)));
+	scene1->ajouterRamassable(new Monnaie("monnaie1", sf::Vector2f(300, 200)));
+	
+	
 	chargerScene(scene1);
-
-	inventaire = new Inventaire(sf::Vector2f(largeurInventaire, hauteurFenetre));
+	clicFenetre = 0;
 }
 
 int main() { 
@@ -79,15 +89,17 @@ int main() {
 	
 	fenetre.setPosition(sf::Vector2i(0, 0));
 	fenetre.setFramerateLimit(60);
-	sf::Event event;
+	sf::Event evenement;
+	sf::Event* evenementTexte;
 	while (true) {
-		while (fenetre.pollEvent(event)) {
-			if (event.type == sf::Event::Closed) {
+		evenementTexte = nullptr;
+		while (fenetre.pollEvent(evenement)) {
+			if (evenement.type == sf::Event::Closed) {
 				fenetre.close();
 				return 0;
 			}
-			if (event.type == sf::Event::KeyPressed) {
-				if (event.key.code == sf::Keyboard::Escape) {
+			if (evenement.type == sf::Event::KeyPressed) {
+				if (evenement.key.code == sf::Keyboard::Escape) {
 					if (not toucheEchapPressee) {
 						toucheEchapPressee = true;
 						if (pleinEcran) fenetre.create(sf::VideoMode(largeurFenetre, hauteurFenetre), "Chasse au Trésor");
@@ -96,17 +108,30 @@ int main() {
 					}
 				}
 			} 
-			if (event.type == sf::Event::KeyReleased) {
-				if (event.key.code == sf::Keyboard::Escape) toucheEchapPressee = false;
+			if (evenement.type == sf::Event::KeyReleased) {
+				if (evenement.key.code == sf::Keyboard::Escape) toucheEchapPressee = false;
 			}
+			if (evenement.type == sf::Event::TextEntered) evenementTexte = &evenement;
 		}
 		sf::Vector2i souris = sf::Mouse::getPosition(fenetre);
 		bool clic = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+		progressionEtatsClic(clicFenetre, clic, true);
 		fenetre.draw(sprite);
-		Scene* _scene = scene->interactionContenu(souris, clic, inventaire);
+		Scene* _scene = scene->interactionContenu(souris, clic, inventaire, evenementTexte);
 		chargerScene(_scene);
 		scene->afficherContenu(&fenetre, echelle);
 		inventaire->afficher(&fenetre, sf::Vector2f(largeurFenetre - largeurInventaire, 0));
+		boutonSon->afficher(&fenetre, sf::Vector2f(0,0));
+		if (boutonSon->interactionSouris(souris, clic)) {
+			if (boutonSon->getType() == "sonOn") {
+				boutonSon->changerType("sonOff");
+				musique.setVolume(0);
+			}
+			else {
+				boutonSon->changerType("sonOn");
+				musique.setVolume(100);
+			}
+		}
 		fenetre.display();
 		fenetre.clear();
 	}

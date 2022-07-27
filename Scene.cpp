@@ -17,7 +17,7 @@ void Scene::afficherContenu(sf::RenderWindow* fenetre, sf::Vector2f echelle) {
 	if (quete != nullptr) quete->afficher(fenetre);
 }
 
-Scene* Scene::interactionContenu(sf::Vector2i souris, bool clic, Inventaire* inventaire) {
+Scene* Scene::interactionContenu(sf::Vector2i souris, bool clic, Inventaire* inventaire, sf::Event* evenementTexte) {
 	Decor* decor;
 	if (quete == nullptr) {
 		Quete* _quete;
@@ -31,7 +31,8 @@ Scene* Scene::interactionContenu(sf::Vector2i souris, bool clic, Inventaire* inv
 			ramassable = ramassables[i];
 			if (ramassable->interactionSouris(souris, clic)) {
 				retirerRamassable(ramassable);
-				inventaire->ajouterRamassable(ramassable);
+				if (ramassable->estMonnaie()) inventaire->ajouterMonnaie(1);
+				else inventaire->ajouterRamassable(ramassable);
 			}
 		}
 		Scene* suivant;
@@ -41,11 +42,11 @@ Scene* Scene::interactionContenu(sf::Vector2i souris, bool clic, Inventaire* inv
 		}
 	}
 	else {
-		std::string resultat = quete->interactionSouris(souris, clic);
+		std::string resultat = quete->interactionSouris(souris, clic, evenementTexte);
 		if (resultat != "") {
 			if (resultat == "fermer") quete = nullptr;
 			else if (resultat == "fantome") {
-				if (inventaire->contient("baton")) {
+				if (inventaire->contient("baton") and quete->getTexte("barreFantome") == "fantome") {
 					progression->activerClee("fantome");
 					inventaire->retirerRamassable("baton");
 					quete = nullptr;

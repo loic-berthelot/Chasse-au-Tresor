@@ -2,6 +2,7 @@
 #include "General.hpp"
 
 class Bouton {
+protected:
 	sf::Sprite sprite;
 	sf::Vector2f positionRelative;
 	sf::Texture texture;
@@ -12,6 +13,7 @@ class Bouton {
 	sf::Font police;
 	int etatClic;
 public:
+	Bouton() {}
 	Bouton(std::string _nom, std::string _type, sf::Vector2f _positionRelative, std::string _texte="") {
 		nom = _nom;
 		texte = _texte;
@@ -30,7 +32,13 @@ public:
 		imageTexte.setFillColor(sf::Color::Black);
 		etatClic = 0;
 	}
-	void afficher(sf::RenderWindow * fenetre, sf::Vector2f position);
-	bool interactionSouris(sf::Vector2i souris, bool clic);
+	virtual void afficher(sf::RenderWindow * fenetre, sf::Vector2f position);
+	virtual bool interactionSouris(sf::Vector2i souris, bool clic);
 	std::string getNom();
+	std::string getType();
+	std::string getTexte();
+	void changerType(std::string _type);
+	void changerTexte(std::string _texte);
+	virtual void selectionner(bool selection);
+	virtual void reagirEntree(sf::Event* evenement);
 };

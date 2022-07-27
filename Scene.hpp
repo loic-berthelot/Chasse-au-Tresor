@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "Fleche.hpp"
 #include "Ramassable.hpp"
+#include "Monnaie.hpp"
 #include "Inventaire.hpp"
 #include "Decor.hpp"
 #include "Quete.hpp"
@@ -35,11 +36,13 @@ public:
 		scenes.push_back(this);
 	}
 	void afficherContenu(sf::RenderWindow* fenetre, sf::Vector2f echelle);
-	Scene* interactionContenu(sf::Vector2i souris, bool clic, Inventaire* inventaire);
+	Scene* interactionContenu(sf::Vector2i souris, bool clic, Inventaire* inventaire, sf::Event* evenementTexte);
 	std::string getNom();
 	void ajouterFleche(Fleche* fleche);
 	void ajouterRamassable(Ramassable* ramassable);
 	void retirerRamassable(Ramassable* ramassable);
+	void ajouterMonnaie(Monnaie* monnaie);
+	void retirerMonnaie(Monnaie* monnaie);
 	void ajouterDecor(Decor* decor);
 	void retirerDecor(std::string nom);
 	void ajouterQuete(Quete* _quete);

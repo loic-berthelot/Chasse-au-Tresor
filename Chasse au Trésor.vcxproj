@@ -149,11 +149,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BarreSaisie.cpp" />
     <ClCompile Include="Bouton.cpp" />
     <ClCompile Include="Decor.cpp" />
     <ClCompile Include="Fleche.cpp" />
     <ClCompile Include="General.cpp" />
     <ClCompile Include="Inventaire.cpp" />
+    <ClCompile Include="Monnaie.cpp" />
     <ClCompile Include="Objet.cpp" />
     <ClCompile Include="Progression.cpp" />
     <ClCompile Include="Quete.cpp" />
@@ -162,11 +164,13 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BarreSaisie.hpp" />
     <ClInclude Include="Bouton.hpp" />
     <ClInclude Include="Decor.hpp" />
     <ClInclude Include="Fleche.hpp" />
     <ClInclude Include="General.hpp" />
     <ClInclude Include="Inventaire.hpp" />
+    <ClInclude Include="Monnaie.hpp" />
     <ClInclude Include="Objet.hpp" />
     <ClInclude Include="Progression.hpp" />
     <ClInclude Include="Quete.hpp" />
