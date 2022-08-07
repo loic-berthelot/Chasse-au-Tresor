@@ -10,7 +10,7 @@ public:
 		position = _position;
 		coefTaille = _coefTaille;
 		sprite.setRotation(angle);
-		creerSprite("images/decors/" + nom + ".png");
+		creerSprite("ressources/images/decors/" + nom + ".png");
 		sprite.setScale(coefTaille, coefTaille);
 		if (nom == "fantome") {
 			quete = new Quete("fantome", "Je suis un fantome.\nCraignez moi !", dimensionsFenetre);

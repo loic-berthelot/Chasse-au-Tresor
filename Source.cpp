@@ -1,6 +1,5 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include <iostream>
 #include "Scene.hpp"
 #include "Fleche.hpp"
 #include "Ramassable.hpp"
@@ -26,25 +25,19 @@ sf::Music musique;
 Bouton* boutonSon;
 int clicFenetre;
 
-Scene* getScene(std::string nom) {
-	for (int i = 0; i < scenes.size(); i++) {
-		if (scenes[i]->getNom() == nom) return scenes[i];
-	}
-}
-
 void chargerScene(Scene* _scene) {
 	if (_scene != scene or progression->comporteNouveautes()) {
 		scene = _scene;
 		if (scene->getNom() == "scene2") {
 			if (progression->cleeActive("fantome")) {
-				scene->ajouterFleche(new Fleche(getScene("scene3"), sf::Vector2f(100, 250), -40));
+				scene->ajouterFleche(new Fleche("scene3", sf::Vector2f(100, 250), -40));
 				scene->retirerDecor("fantome");
 				progression->utiliserClee("fantome");
 			}
 		} 
 		progression->setNouveautes(false);
 
-		image.loadFromFile("images/scenes/"+scene->getNom()+".png");
+		image.loadFromFile("ressources/images/scenes/"+scene->getNom()+".png");
 		texture.loadFromImage(image);
 		sprite.setTexture(texture);
 		sf::Vector2f taille = sf::Vector2f(texture.getSize().x, texture.getSize().y);
@@ -54,7 +47,7 @@ void chargerScene(Scene* _scene) {
 }
 
 void initialisation() {
-	musique.openFromFile("sounds/swan_lake.ogg");
+	musique.openFromFile("ressources/sounds/swan_lake.ogg");
 	musique.play();
 	musique.setLoop(true);
 
@@ -65,11 +58,11 @@ void initialisation() {
 
 	boutonSon = new Bouton("son", "sonOn", sf::Vector2f(30, 30));
 
-	Scene* scene1 = new Scene("scene1");
-	Scene* scene2 = new Scene("scene2");
-	Scene* scene3 = new Scene("scene3");
-	Scene* scene4 = new Scene("scene4");
-	scene1->ajouterFleche(new Fleche(scene2, sf::Vector2f(550, 400), 20));
+	Scene* depart = new Scene("depart");
+	Scene* scene1 = new Scene("maison");
+	Scene* scene2 = new Scene("ponton");
+	Scene* scene3 = new Scene("herbe");
+	/*scene1->ajouterFleche(new Fleche(scene2, sf::Vector2f(550, 400), 20));
 	scene1->ajouterFleche(new Fleche(scene3, sf::Vector2f(100, 400), -50));
 	scene2->ajouterFleche(new Fleche(scene1, sf::Vector2f(420, 420), 180, 1.5));
 	scene3->ajouterFleche(new Fleche(scene1, sf::Vector2f(400, 500), 140));
@@ -78,13 +71,15 @@ void initialisation() {
 	scene4->ajouterRamassable(new Ramassable("baton", sf::Vector2f(400, 400)));
 	scene2->ajouterDecor(new Decor("fantome", sf::Vector2f(200, 400), sf::Vector2f(largeurFenetre, hauteurFenetre)));
 	scene1->ajouterRamassable(new Monnaie("monnaie1", sf::Vector2f(300, 200)));
+	*/
 	
 	
-	chargerScene(scene1);
+	chargerScene(depart);
 	clicFenetre = 0;
 }
 
 int main() { 
+
 	initialisation();
 	
 	fenetre.setPosition(sf::Vector2i(0, 0));

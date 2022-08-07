@@ -1,6 +1,16 @@
 #include "Scene.hpp"
 #include <iostream>
 
+extern std::vector<Scene*> scenes;
+
+Scene* getScene(std::string nom) {
+	for (int i = 0; i < scenes.size(); i++) {
+		if (scenes[i]->getNom() == nom) return scenes[i];
+		std::cout << i;
+	}
+	return nullptr;
+}
+
 void Scene::afficherContenu(sf::RenderWindow* fenetre, sf::Vector2f echelle) {
 	for (int i = 0; i < fleches.size(); i++) {
 		fleches[i]->adapterEchelle(echelle);
@@ -37,8 +47,11 @@ Scene* Scene::interactionContenu(sf::Vector2i souris, bool clic, Inventaire* inv
 		}
 		Scene* suivant;
 		for (int i = 0; i < fleches.size(); i++) {
-			suivant = fleches[i]->interactionSouris(souris, clic);
-			if (suivant != nullptr) return suivant;
+			suivant = getScene(fleches[i]->interactionSouris(souris, clic));
+			if (suivant != nullptr) {
+				std::cout << "ok";
+				return suivant;
+			}
 		}
 	}
 	else {

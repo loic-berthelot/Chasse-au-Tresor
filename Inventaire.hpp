@@ -18,12 +18,12 @@ public:
 		taille = _taille;
 		sprite.setSize(taille);
 		sf::Image image;
-		image.loadFromFile("images/textures/monnaie.png");
+		image.loadFromFile("ressources/images/textures/monnaie.png");
 		texturePiece.loadFromImage(image);
 		piece.setTexture(&texturePiece);
 		piece.setSize(sf::Vector2f(50, 50));
 
-		image.loadFromFile("images/textures/inventaire.png");
+		image.loadFromFile("ressources/images/textures/inventaire.png");
 		textureSprite.loadFromImage(image);
 		sprite.setTexture(&textureSprite);		
 
@@ -32,7 +32,7 @@ public:
 		rectangle.setOutlineThickness(2);
 		rectangle.setSize(sf::Vector2f(tailleCases, tailleCases));
 
-		police.loadFromFile("polices/arial_narrow_7.ttf");
+		police.loadFromFile("ressources/polices/arial_narrow_7.ttf");
 		imageTexte.setFont(police);
 		imageTexte.setString(std::to_string(monnaie));
 		imageTexte.setCharacterSize(36);

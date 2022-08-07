@@ -29,7 +29,7 @@ public:
 			ajouterBouton(new Bouton("fantome", "texte1", sf::Vector2f(60, dimensionsSprite.height - 35), "Bouh !"));
 			ajouterBouton(new BarreSaisie("barreFantome", sf::Vector2f(250, 200), sf::Vector2f(400, 50)));
 		}
-		police.loadFromFile("polices/arial_narrow_7.ttf");
+		police.loadFromFile("ressources/polices/arial_narrow_7.ttf");
 		imageTexte.setFont(police);
 		imageTexte.setString(texte);
 		imageTexte.setCharacterSize(24);

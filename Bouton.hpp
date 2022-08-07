@@ -20,12 +20,12 @@ public:
 		type = _type;
 		positionRelative = _positionRelative;
 		sf::Image image;
-		image.loadFromFile("images/boutons/"+type+".png");
+		image.loadFromFile("ressources/images/boutons/"+type+".png");
 		texture.loadFromImage(image);
 		sprite.setTexture(texture);
 		sf::FloatRect dimensions = sprite.getGlobalBounds();
 		sprite.setOrigin(dimensions.width / 2, dimensions.height / 2);
-		police.loadFromFile("polices/arial_narrow_7.ttf");
+		police.loadFromFile("ressources/polices/arial_narrow_7.ttf");
 		imageTexte.setFont(police);
 		imageTexte.setString(texte);
 		imageTexte.setCharacterSize(24);

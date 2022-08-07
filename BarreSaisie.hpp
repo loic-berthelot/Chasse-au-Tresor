@@ -14,7 +14,7 @@ public:
 		sprite.setOrigin(dimensions.x / 2, dimensions.y / 2);
 		sprite.setFillColor(sf::Color::Black);
 		sprite.setOutlineColor(sf::Color::White);
-		police.loadFromFile("polices/arial_narrow_7.ttf");
+		police.loadFromFile("ressources/polices/arial_narrow_7.ttf");
 		imageTexte.setFont(police);
 		imageTexte.setString(texte);
 		imageTexte.setCharacterSize(24);

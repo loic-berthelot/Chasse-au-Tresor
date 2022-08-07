@@ -31,7 +31,7 @@ std::string Bouton::getTexte() {
 void Bouton::changerType(std::string _type) {
 	type = _type;
 	sf::Image image;
-	image.loadFromFile("images/boutons/" + type + ".png");
+	image.loadFromFile("ressources/images/boutons/" + type + ".png");
 	texture.loadFromImage(image);
 	sprite.setTexture(texture);
 }

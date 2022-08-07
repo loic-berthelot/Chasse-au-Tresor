@@ -1,0 +1,6 @@
+image : scene1.png
+position : etang.png, 0.5, 0.5, 90 
+fleche : scene2, 550, 400, 20
+fleche : scene2, 100, 400, -50
+ramassable : baton, 400, 400
+monnaie : monnaie1, 300, 200

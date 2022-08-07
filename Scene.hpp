@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "Fleche.hpp"
@@ -34,6 +35,39 @@ public:
 		nom = _nom;
 		fleches.clear();
 		scenes.push_back(this);
+		std::ifstream flux("ressources/scenes/"+nom+".txt");
+		std::string ligne, mot, role;
+		int indiceBloc, indiceMot;
+		if (flux) {
+			while (std::getline(flux, ligne)) {
+				mot = "";
+				indiceBloc = 0;
+				indiceMot = 0;
+				ligne += ':';
+				for (int i = 0; i < ligne.length(); i++) {
+					if (ligne[i] == ':' or ligne[i] == ',') {
+						while (mot [mot.length()-1] == ' ') mot = mot.substr(0, mot.length() - 1);
+						if (indiceBloc == 0) {
+							role = mot;
+						} else {
+							if (role == "fleche") {
+								std::cout << "fleche";
+								ajouterFleche(new Fleche("maison", sf::Vector2f(550, 400), 20));
+							}
+						}
+						mot = "";
+						if (ligne[i] == ':') {
+							indiceBloc++;
+							indiceMot = 0;
+						}
+						else {
+							indiceMot++;
+						}
+					}
+					else if (ligne[i] != ' ' or mot.length() > 0)  mot += ligne[i];
+				}
+			}
+		}
 	}
 	void afficherContenu(sf::RenderWindow* fenetre, sf::Vector2f echelle);
 	Scene* interactionContenu(sf::Vector2i souris, bool clic, Inventaire* inventaire, sf::Event* evenementTexte);

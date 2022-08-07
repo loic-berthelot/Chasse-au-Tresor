@@ -11,7 +11,7 @@ public:
 		sprite.setRotation(angle);
 		nom = _nom;
 		monnaie = (nom.substr(0, 7) == "monnaie");
-		creerSprite("images/ramassables/" + nom + ".png");
+		creerSprite("ressources/images/ramassables/" + nom + ".png");
 	}
 	void formaterCase(int tailleCases);
 	bool estMonnaie();
