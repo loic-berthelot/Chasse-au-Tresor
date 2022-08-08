@@ -7,7 +7,7 @@ class BarreSaisie : public Bouton {
 public:
 	BarreSaisie(std::string _nom, sf::Vector2f _positionRelative, sf::Vector2f dimensions) {
 		nom = _nom;
-		texte = "123";
+		texte = "";
 		type = "barreSaisie";
 		positionRelative = _positionRelative;
 		sprite.setSize(dimensions);
@@ -25,5 +25,5 @@ public:
 	virtual void reagirEntree(sf::Event* evenement);
 	virtual void selectionner(bool selection);
 	virtual bool interactionSouris(sf::Vector2i souris, bool clic);
-	virtual void afficher(sf::RenderWindow* fenetre, sf::Vector2f position);
+	virtual void afficher(sf::RenderWindow* fenetre, sf::Vector2f position, sf::Vector2f dimensionsCadre = sf::Vector2f(0,0));
 };

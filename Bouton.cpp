@@ -1,9 +1,13 @@
 #include "Bouton.hpp"
 
-void Bouton::afficher(sf::RenderWindow* fenetre, sf::Vector2f position) {
-	sprite.setPosition(sf::Vector2f(positionRelative.x + position.x, positionRelative.y + position.y));
-	fenetre->draw(sprite);
+void Bouton::afficher(sf::RenderWindow* fenetre, sf::Vector2f _position, sf::Vector2f dimensionsCadre) {
 	sf::FloatRect dimensionsSprite = sprite.getGlobalBounds();
+	sf::Vector2f position(_position.x + positionRelative.x, _position.y + positionRelative.y);
+	if (positionRelative.x < 0) position.x += dimensionsCadre.x;
+	if (positionRelative.y < 0) position.y += dimensionsCadre.x;
+	sprite.setPosition(position);
+	dimensionsSprite = sprite.getGlobalBounds();
+	fenetre->draw(sprite);
 	sf::FloatRect dimensionsTexte = imageTexte.getGlobalBounds();
 	imageTexte.setPosition(sf::Vector2f(dimensionsSprite.left+(dimensionsSprite.width-dimensionsTexte.width)/2, dimensionsSprite.top + (dimensionsSprite.height - dimensionsTexte.height) / 2));
 	fenetre->draw(imageTexte);

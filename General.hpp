@@ -1,5 +1,6 @@
 #pragma once
 #include "Progression.hpp"
+#include <fstream>
 
 extern Progression* progression;
 extern std::vector<Scene*> scenes;

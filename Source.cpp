@@ -28,13 +28,6 @@ int clicFenetre;
 void chargerScene(Scene* _scene) {
 	if (_scene != scene or progression->comporteNouveautes()) {
 		scene = _scene;
-		if (scene->getNom() == "scene2") {
-			if (progression->cleeActive("fantome")) {
-				scene->ajouterFleche(new Fleche("scene3", sf::Vector2f(100, 250), -40));
-				scene->retirerDecor("fantome");
-				progression->utiliserClee("fantome");
-			}
-		} 
 		progression->setNouveautes(false);
 
 		image.loadFromFile("ressources/images/scenes/"+scene->getNom()+".png");
@@ -62,17 +55,6 @@ void initialisation() {
 	Scene* scene1 = new Scene("maison");
 	Scene* scene2 = new Scene("ponton");
 	Scene* scene3 = new Scene("herbe");
-	/*scene1->ajouterFleche(new Fleche(scene2, sf::Vector2f(550, 400), 20));
-	scene1->ajouterFleche(new Fleche(scene3, sf::Vector2f(100, 400), -50));
-	scene2->ajouterFleche(new Fleche(scene1, sf::Vector2f(420, 420), 180, 1.5));
-	scene3->ajouterFleche(new Fleche(scene1, sf::Vector2f(400, 500), 140));
-	scene3->ajouterFleche(new Fleche(scene4, sf::Vector2f(600, 400), 0, 1, "loupe"));
-	scene4->ajouterFleche(new Fleche(scene3, sf::Vector2f(50, 50), 0, 2, "croix1"));
-	scene4->ajouterRamassable(new Ramassable("baton", sf::Vector2f(400, 400)));
-	scene2->ajouterDecor(new Decor("fantome", sf::Vector2f(200, 400), sf::Vector2f(largeurFenetre, hauteurFenetre)));
-	scene1->ajouterRamassable(new Monnaie("monnaie1", sf::Vector2f(300, 200)));
-	*/
-	
 	
 	chargerScene(depart);
 	clicFenetre = 0;

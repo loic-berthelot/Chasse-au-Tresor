@@ -6,11 +6,10 @@ void Quete::ajouterBouton(Bouton* bouton) {
 }
 
 void Quete::afficher(sf::RenderWindow * fenetre) {
+	sf::Vector2f dimensions = sf::Vector2f(sprite.getGlobalBounds().width, sprite.getGlobalBounds().height);
 	fenetre->draw(sprite);
-	fenetre->draw(imageTexte);
-	for (int i = 0; i < boutons.size(); i++) {
-		boutons[i]->afficher(fenetre, position);
-	}
+	for (int i = 0; i < textes.size(); i++) fenetre->draw(textes[i]);
+	for (int i = 0; i < boutons.size(); i++) boutons[i]->afficher(fenetre, position, dimensions);
 }
 
 std::string Quete::interactionSouris(sf::Vector2i souris, bool clic, sf::Event* evenementTexte) {

@@ -17,6 +17,7 @@ public:
 	bool interactionSouris(sf::Vector2i souris, bool clic);
 	void setCoefTaille(float _coefTaille);
 	void setPosition(sf::Vector2f _position);
-	sf::Sprite retournerSprite();
+	void afficher(sf::RenderWindow* fenetre);
 	std::string getNom();
+	sf::Sprite retournerSprite();
 };

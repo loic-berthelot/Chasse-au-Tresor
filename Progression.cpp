@@ -1,6 +1,24 @@
 #include "Progression.hpp"
 #include <iostream>
 
+void Progression::setValeur(std::string variable, std::string valeur) {
+	for (int i = 0; i < variables.size(); i++) {
+		if (variable == variables[i]) {
+			valeurs[i] = valeur;
+			return;
+		}
+	}
+	variables.push_back(variable);
+	valeurs.push_back(valeur);
+}
+
+std::string Progression::getValeur(std::string variable) {
+	for (int i = 0; i < variables.size(); i++) {
+		if (variable == variables[i]) return valeurs[i];
+	}
+	return "";
+}
+
 void Progression::activerClee(std::string clee) {
 	clees.push_back(clee);
 	utilisees.push_back(false);

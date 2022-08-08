@@ -1,3 +1,4 @@
-texte : "Je suis un fantome. Craignez moi !", 200, 200
-saisie : saisie1, 200, 400
-bouton : "Bouh !", 400, 500 : saisie1 = "fantome", baton : fantome
+texte : "Je suis un fantome. Craignez moi !", 80, 120
+saisie : saisie1, 200, 400, 200, 50
+bouton : effrayer_fantome, texte1, 100, -50, "Bouh !"
+texte : "AAAAAA", 150, 300

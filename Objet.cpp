@@ -1,5 +1,9 @@
 #include "Objet.hpp"
 
+extern int largeurFenetre;
+extern int hauteurFenetre;
+extern int largeurInventaire;
+
 sf::Sprite Objet::getSprite() { return sprite; }
 
 void Objet::creerSprite(std::string adresse) {
@@ -31,10 +35,15 @@ void Objet::setPosition(sf::Vector2f _position) {
 	sprite.setPosition(_position);
 }
 
-sf::Sprite Objet::retournerSprite() {
-	return sprite;
+void Objet::afficher(sf::RenderWindow* fenetre) {
+	sprite.setPosition(sf::Vector2f(position.x * (largeurFenetre-largeurInventaire), position.y * hauteurFenetre));
+	fenetre->draw(sprite);
 }
 
 std::string Objet::getNom() {
 	return nom;
+}
+
+sf::Sprite Objet::retournerSprite() {
+	return sprite;
 }

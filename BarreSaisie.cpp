@@ -3,9 +3,10 @@
 void BarreSaisie::reagirEntree(sf::Event* evenement){
 	if (not selectionne) return;
 	if (evenement == nullptr) return;
-	std::string _texte = getTexte();
+	std::string _texte = texte;
 	if (evenement->text.unicode == 8) changerTexte(texte.substr(0, _texte.length() - 1));
 	else if (sprite.getGlobalBounds().width-imageTexte.getGlobalBounds().width>20) changerTexte(_texte + static_cast<char>(evenement->text.unicode));
+	progression->setValeur(nom, texte);
 }
 
 void BarreSaisie::selectionner(bool selection) {
@@ -21,10 +22,14 @@ bool BarreSaisie::interactionSouris(sf::Vector2i souris, bool clic) {
 	return (etatClic == 3);
 }
 
-void BarreSaisie::afficher(sf::RenderWindow* fenetre, sf::Vector2f position) {
-	sprite.setPosition(sf::Vector2f(positionRelative.x + position.x, positionRelative.y + position.y));
-	fenetre->draw(sprite);
+void BarreSaisie::afficher(sf::RenderWindow* fenetre, sf::Vector2f _position, sf::Vector2f dimensionsCadre) {
 	sf::FloatRect dimensionsSprite = sprite.getGlobalBounds();
+	sf::Vector2f position(_position.x + positionRelative.x, _position.y + positionRelative.y);
+	if (positionRelative.x < 0) position.x += dimensionsCadre.x;
+	if (positionRelative.y < 0) position.y += dimensionsCadre.x;
+	sprite.setPosition(position);
+	fenetre->draw(sprite);
+	dimensionsSprite = sprite.getGlobalBounds();
 	sf::FloatRect dimensionsTexte = imageTexte.getGlobalBounds();
 	imageTexte.setPosition(sf::Vector2f(dimensionsSprite.left + (dimensionsSprite.width - dimensionsTexte.width) / 2, dimensionsSprite.top + 10));
 	fenetre->draw(imageTexte);

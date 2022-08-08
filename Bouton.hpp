@@ -32,7 +32,7 @@ public:
 		imageTexte.setFillColor(sf::Color::Black);
 		etatClic = 0;
 	}
-	virtual void afficher(sf::RenderWindow * fenetre, sf::Vector2f position);
+	virtual void afficher(sf::RenderWindow * fenetre, sf::Vector2f _position, sf::Vector2f dimensionsCadre=sf::Vector2f(0,0));
 	virtual bool interactionSouris(sf::Vector2i souris, bool clic);
 	std::string getNom();
 	std::string getType();
