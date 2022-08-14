@@ -6,6 +6,7 @@
 #include "Inventaire.hpp"
 #include "Decor.hpp"
 #include "Quete.hpp"
+#include <filesystem>
 
 int largeurFenetre = 1280;
 int hauteurFenetre = 1024;
@@ -26,24 +27,25 @@ Bouton* boutonSon;
 int clicFenetre;
 
 void chargerScene(Scene* _scene) {
-	if (_scene != scene or progression->comporteNouveautes()) {
+	if (_scene != scene) {
 		scene = _scene;
-		progression->setNouveautes(false);
 
 		image.loadFromFile("ressources/images/scenes/"+scene->getNom()+".png");
 		texture.loadFromImage(image);
 		sprite.setTexture(texture);
 		sf::Vector2f taille = sf::Vector2f(texture.getSize().x, texture.getSize().y);
 		echelle = sf::Vector2f((largeurFenetre-largeurInventaire)/taille.x, hauteurFenetre/taille.y);
-		sprite.setScale(echelle.x, echelle.y);	
+		sprite.setScale(echelle.x, echelle.y);
+		if (scene->getMusique() == "stop") musique.stop();
+		else if (scene->getMusique() != "") {
+			musique.openFromFile("ressources/sons/"+scene->getMusique());
+			musique.play();
+		}
 	}
 }
 
 void initialisation() {
-	musique.openFromFile("ressources/sounds/swan_lake.ogg");
-	musique.play();
 	musique.setLoop(true);
-
 	progression = new Progression();
 	largeurInventaire = 250;
 	fenetre.create(sf::VideoMode(largeurFenetre, hauteurFenetre), "Chasse au Trésor", sf::Style::Fullscreen);
@@ -51,19 +53,28 @@ void initialisation() {
 
 	boutonSon = new Bouton("son", "sonOn", sf::Vector2f(30, 30));
 
-	Scene* depart = new Scene("depart");
-	Scene* scene1 = new Scene("maison");
-	Scene* scene2 = new Scene("ponton");
-	Scene* scene3 = new Scene("herbe");
-	
+	std::string nom;
+	Scene* depart = nullptr;
+	for (const auto& file : std::filesystem::directory_iterator("./ressources/scenes")) {
+		nom = file.path().string();
+		nom = nom.substr(20, nom.size() - 24);
+		if (nom == "depart") depart = new Scene(nom);
+		else new Scene(nom);
+	}
 	chargerScene(depart);
 	clicFenetre = 0;
 }
 
-int main() { 
+void sauvegarder(std::string fichier) {
+	std::ofstream flux("sauvegardes/"+fichier+".txt");
+	flux << inventaire->taillePlaces() << std::endl;
+	for (int i = 0; i < inventaire->taillePlaces(); i++) flux << inventaire->nomRamassable(i) << std::endl;
+	flux << progression->tailleClees() << std::endl;
+	for (int i = 0; i < progression->tailleClees(); i++) flux << progression->nomClee(i) << std::endl;
+}
 
+int main() { 
 	initialisation();
-	
 	fenetre.setPosition(sf::Vector2i(0, 0));
 	fenetre.setFramerateLimit(60);
 	sf::Event evenement;
@@ -111,6 +122,7 @@ int main() {
 		}
 		fenetre.display();
 		fenetre.clear();
+		sauvegarder("sauvegarde1");
 	}
 	return 0;
 }

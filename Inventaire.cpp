@@ -52,3 +52,11 @@ bool Inventaire::acheter(int valeur) {
 	imageTexte.setString(std::to_string(monnaie));
 	return true;
 }
+
+int Inventaire::taillePlaces() {
+	return ramassables.size();
+}
+
+std::string Inventaire::nomRamassable(int index) {
+	return ramassables[index]->getNom();;
+}

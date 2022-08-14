@@ -45,4 +45,6 @@ public:
 	int getMonnaie();
 	void ajouterMonnaie(int valeur);
 	bool acheter(int valeur);
+	int taillePlaces();
+	std::string nomRamassable(int index);
 };

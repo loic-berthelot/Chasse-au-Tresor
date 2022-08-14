@@ -1,6 +1,5 @@
 condition_objet : baton
 condition_saisie : saisie1, "fantome" 
-progression : fantome
 ajouter_fleche : maison, ponton, 0.15, 0.4, -90, 1, fleche1
 ajouter_fleche : ponton, maison, 0.75, 0.4, 90, 1, fleche1
 retirer_decor : maison, fantome

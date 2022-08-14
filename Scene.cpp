@@ -43,17 +43,17 @@ void Scene::executerAlgorithme(std::string nom) {
 							if (role == "fermer_quete") quete = nullptr;
 						} else if (indiceBloc == 1) {
 							if (role == "progression") {
-								progression->activerClee(tableau[0]);
+								progression->ajouterClee(tableau[0]);
 							} else if (role == "condition_objet") {
 								if (not inventaire->contient(tableau[0])) return;
 							} else if (role == "condition_saisie") {
 								if (progression->getValeur(tableau[0]) != tableau[1]) return;
-							}
-							else if (role == "ajouter_fleche") {
-								std::cout << "ok";
+							} else if (role == "ajouter_fleche") {
 								getScene(tableau[0])->ajouterFleche(new Fleche(tableau[1], sf::Vector2f(std::stof(tableau[2]), std::stof(tableau[3])), std::stoi(tableau[4]), std::stof(tableau[5]), tableau[6]));
+								progression->ajouterClee(ligne);
 							} else if (role == "retirer_decor") {
 								getScene(tableau[0])->retirerDecor(tableau[1]);
+								progression->ajouterClee(ligne);
 							} else if (role == "retirer_inventaire") {
 								inventaire->retirerRamassable(tableau[0]);
 							}
@@ -138,4 +138,8 @@ void Scene::retirerDecor(std::string nom) {
 
 void Scene::ajouterQuete(Quete* _quete) {
 	quete = _quete;
+}
+
+std::string Scene::getMusique() {
+	return musique;
 }

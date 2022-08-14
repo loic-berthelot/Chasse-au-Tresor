@@ -1,3 +1,4 @@
 position : etang.png, 0.5, 0.5, 90 
 fleche : depart, 0.5, 0.5, 190
 decor : fantome, fantome, 0.3, 0.3, 0, 1.5
+musique : stop
