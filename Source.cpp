@@ -6,6 +6,7 @@
 #include "Inventaire.hpp"
 #include "Decor.hpp"
 #include "Quete.hpp"
+#include "Carte.hpp"
 #include <filesystem>
 
 int largeurFenetre = 1280;
@@ -25,11 +26,11 @@ std::vector<Scene*> scenes;
 sf::Music musique;
 Bouton* boutonSon;
 int clicFenetre;
+Carte* carte;
 
 void chargerScene(Scene* _scene) {
 	if (_scene != scene) {
 		scene = _scene;
-
 		image.loadFromFile("ressources/images/scenes/"+scene->getNom()+".png");
 		texture.loadFromImage(image);
 		sprite.setTexture(texture);
@@ -40,6 +41,10 @@ void chargerScene(Scene* _scene) {
 		else if (scene->getMusique() != "") {
 			musique.openFromFile("ressources/sons/"+scene->getMusique());
 			musique.play();
+		}
+		if (scene->getCarte() != "") {
+			carte->changerCarte(scene->getCarte());			
+			carte->changerCurseur(scene->getPositionCurseur(), scene->getAngleCurseur());
 		}
 	}
 }
@@ -61,6 +66,7 @@ void initialisation() {
 		if (nom == "depart") depart = new Scene(nom);
 		else new Scene(nom);
 	}
+	carte = new Carte();
 	chargerScene(depart);
 	clicFenetre = 0;
 }
@@ -120,6 +126,7 @@ int main() {
 				musique.setVolume(100);
 			}
 		}
+		carte->afficher(&fenetre);
 		fenetre.display();
 		fenetre.clear();
 		sauvegarder("sauvegarde1");

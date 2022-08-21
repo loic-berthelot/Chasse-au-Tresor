@@ -1,4 +1,4 @@
-position : etang.png, 0.5, 0.5, 90 
+carte : etang.png, 0.5, 0.3, 0 
 fleche : maison, 0.5, 0.5, 20
 fleche : ponton, 0.1, 0.4, -50
 monnaie : monnaie1, 0.3, 0.35

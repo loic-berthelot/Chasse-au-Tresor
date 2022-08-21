@@ -18,12 +18,12 @@ public:
 		taille = _taille;
 		sprite.setSize(taille);
 		sf::Image image;
-		image.loadFromFile("ressources/images/textures/monnaie.png");
+		image.loadFromFile("ressources/images/divers/monnaie.png");
 		texturePiece.loadFromImage(image);
 		piece.setTexture(&texturePiece);
 		piece.setSize(sf::Vector2f(50, 50));
 
-		image.loadFromFile("ressources/images/textures/inventaire.png");
+		image.loadFromFile("ressources/images/divers/inventaire.png");
 		textureSprite.loadFromImage(image);
 		sprite.setTexture(&textureSprite);		
 

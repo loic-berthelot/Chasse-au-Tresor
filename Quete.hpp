@@ -23,45 +23,27 @@ public:
 		imageTexte.setFont(police);
 		imageTexte.setCharacterSize(24);
 		imageTexte.setFillColor(sf::Color(40, 40, 40));
-		std::ifstream flux("ressources/quetes/" + nom + ".txt");
-		std::string ligne, mot, role;
-		int indiceBloc, indiceMot;
-		std::string tableau[10];
-		bool guillemets;
-		if (flux) {
-			while (std::getline(flux, ligne)) {
-				ligne += ':';
-				mot = "";
-				role = "";
-				indiceBloc = 0;
-				indiceMot = 0;
-				guillemets = false;
-				for (int i = 0; i < ligne.length(); i++) {
-					if ((ligne[i] == ':' or ligne[i] == ',') and not guillemets) {
-						while (mot[mot.length() - 1] == ' ') mot = mot.substr(0, mot.length() - 1);
-						if (indiceBloc == 0) role = mot;
-						else tableau[indiceMot] = mot;
-						if (ligne[i] == ':') {
-							if (role == "texte" and indiceBloc == 1) {
-								imageTexte.setString(tableau[0]);
-								imageTexte.setPosition(sf::Vector2f(std::stof(tableau[1]), std::stof(tableau[2])));
-								textes.push_back(imageTexte);
-							} else if (role == "saisie" and indiceBloc == 1) {
-								boutons.push_back(new BarreSaisie(tableau[0], sf::Vector2f(std::stof(tableau[1]), std::stof(tableau[2])), sf::Vector2f(std::stof(tableau[3]), std::stof(tableau[4]))));
-							}
-							else if (role == "bouton" and indiceBloc == 1) {
-								if (indiceMot < 4) boutons.push_back(new Bouton(tableau[0], tableau[1], sf::Vector2f(std::stof(tableau[2]), std::stof(tableau[3]))));
-								else boutons.push_back(new Bouton(tableau[0], tableau[1], sf::Vector2f(std::stof(tableau[2]), std::stof(tableau[3])), tableau[4]));
-							}
-							indiceBloc++;
-							indiceMot = 0;
-						}
-						else if (ligne[i] == ',') indiceMot++;
-						mot = "";
+		std::vector<std::string> lignes = lireFichier("ressources/quetes/" + nom + ".txt");
+		std::vector<std::vector<std::string>> mots;
+		std::string role;
+		for (int i = 0; i < lignes.size(); i++) {
+			mots = lireLigne(lignes[i]);
+			for (int j = 0; j < mots.size(); j++) {
+				if (j == 0) role = mots[j][0];
+				else if (j == 1) {
+					if (role == "texte") {
+						imageTexte.setString(mots[j][0]);
+						imageTexte.setPosition(sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2])));
+						textes.push_back(imageTexte);
+					} else if (role == "saisie") {
+						boutons.push_back(new BarreSaisie(mots[j][0], sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2])), sf::Vector2f(std::stof(mots[j][3]), std::stof(mots[j][4]))));
 					}
-					else if (ligne[i] == '"') guillemets = not guillemets;
-					else if (ligne[i] != ' ' or mot.length() > 0) mot += ligne[i];
+					else if (role == "bouton") {
+						if (mots[j].size() < 5) boutons.push_back(new Bouton(mots[j][0], mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3]))));
+						else boutons.push_back(new Bouton(mots[j][0], mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3])), mots[j][4]));
+					}
 				}
+				
 			}
 		}
 		boutonFermer = new Bouton("fermer", "fermer", sf::Vector2f(35, 35));

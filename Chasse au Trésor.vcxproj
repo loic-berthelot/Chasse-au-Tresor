@@ -152,6 +152,7 @@
   <ItemGroup>
     <ClCompile Include="BarreSaisie.cpp" />
     <ClCompile Include="Bouton.cpp" />
+    <ClCompile Include="Carte.cpp" />
     <ClCompile Include="Decor.cpp" />
     <ClCompile Include="Fleche.cpp" />
     <ClCompile Include="General.cpp" />
@@ -167,6 +168,7 @@
   <ItemGroup>
     <ClInclude Include="BarreSaisie.hpp" />
     <ClInclude Include="Bouton.hpp" />
+    <ClInclude Include="Carte.hpp" />
     <ClInclude Include="Decor.hpp" />
     <ClInclude Include="Fleche.hpp" />
     <ClInclude Include="General.hpp" />

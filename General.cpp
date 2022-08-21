@@ -35,3 +35,35 @@ void progressionEtatsClic(int& etat, bool clic, bool touche) {
 		else etat = 0;
 	}
 }
+
+std::vector<std::string> lireFichier(std::string adresse) {
+	std::ifstream flux(adresse);
+	std::string ligne;
+	std::vector<std::string> lignes;
+	if (flux) {
+		while (std::getline(flux, ligne)) lignes.push_back(ligne);
+	}
+	return lignes;
+}
+
+std::vector<std::vector<std::string>> lireLigne(std::string ligne) {
+	std::string mot;
+	std::vector<std::string> bloc;
+	std::vector<std::vector<std::string>> mots;
+	bool guillemets = false;
+	ligne += ':';
+	for (int i = 0; i < ligne.length(); i++) {
+		if ((ligne[i] == ':' or ligne[i] == ',') and not guillemets) {
+			while (mot[mot.length() - 1] == ' ' and mot.length() > 0) mot = mot.substr(0, mot.length() - 1);
+			bloc.push_back(mot);
+			if (ligne[i] == ':') {
+				mots.push_back(bloc);
+				bloc.clear();
+			}
+			mot = "";
+		}
+		else if (ligne[i] == '"') guillemets = not guillemets;
+		else if (ligne[i] != ' ' or mot.length() > 0) mot += ligne[i];
+	}
+	return mots;
+}

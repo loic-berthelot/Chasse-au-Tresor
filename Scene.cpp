@@ -1,6 +1,4 @@
 #include "Scene.hpp"
-#include <iostream>
-#include <fstream>
 
 extern std::vector<Scene*> scenes;
 extern Inventaire* inventaire;
@@ -12,6 +10,51 @@ Scene* getScene(std::string nom) {
 	return nullptr;
 }
 
+void Scene::chargerFichier(std::string nom) {
+	std::cout << "ok";
+	musique = "";
+	carte = "";
+	std::vector<std::string> lignes = lireFichier("ressources/scenes/" + nom + ".txt");
+	std::vector<std::vector<std::string>> mots;
+	std::string role;
+	for (int i = 0; i < lignes.size(); i++) {
+		mots = lireLigne(lignes[i]);
+		for (int j = 0; j < mots.size(); j++) {
+			if (j == 0) role = mots[j][0];
+			else if (j == 1) {
+				if (role == "fleche") {
+					if (mots[j].size() < 4) ajouterFleche(new Fleche(mots[j][0], sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2]))));
+					else if (mots[j].size() < 5) ajouterFleche(new Fleche(mots[j][0], sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2])), std::stoi(mots[j][3])));
+					else if (mots[j].size() < 6) ajouterFleche(new Fleche(mots[j][0], sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2])), std::stoi(mots[j][3]), std::stof(mots[j][4])));
+					else ajouterFleche(new Fleche(mots[j][0], sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2])), std::stoi(mots[j][3]), std::stof(mots[j][4]), mots[j][5]));
+				}
+				else if (role == "ramassable" or role == "monnaie") {
+					if (mots[j].size() < 2) ajouterRamassable(new Ramassable(mots[j][0]));
+					else if (mots[j].size() < 4) ajouterRamassable(new Ramassable(mots[j][0], sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2]))));
+					else if (mots[j].size() < 5) ajouterRamassable(new Ramassable(mots[j][0], sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2])), std::stof(mots[j][3])));
+					else ajouterRamassable(new Ramassable(mots[j][0], sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2])), std::stof(mots[j][3]), std::stof(mots[j][4])));
+				}
+				else if (role == "decor") {
+					if (mots[j].size() < 5) ajouterDecor(new Decor(mots[j][0], mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3]))));
+					else if (mots[j].size() < 6) ajouterDecor(new Decor(mots[j][0], mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3])), std::stoi(mots[j][4])));
+					else ajouterDecor(new Decor(mots[j][0], mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3])), std::stoi(mots[j][4]), std::stof(mots[j][5])));
+				}
+				else if (role == "musique") {
+					musique = mots[j][0];
+				}
+				else if (role == "position") {
+					positionCurseur = sf::Vector2f(std::stof(mots[j][0]), std::stof(mots[j][1]));
+				}
+				else if (role == "carte") {
+					carte = mots[j][0];
+					positionCurseur = sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2]));
+					angleCurseur = std::stof(mots[j][3]);
+				}
+			}
+		}
+	}
+}
+
 void Scene::afficherContenu(sf::RenderWindow* fenetre, sf::Vector2f echelle) {
 	for (int i = 0; i < fleches.size(); i++) fleches[i]->afficher(fenetre);
 	for (int i = 0; i < ramassables.size(); i++) ramassables[i]->afficher(fenetre);
@@ -20,52 +63,37 @@ void Scene::afficherContenu(sf::RenderWindow* fenetre, sf::Vector2f echelle) {
 }
 
 void Scene::executerAlgorithme(std::string nom) {
-	std::ifstream flux("ressources/algorithmes/"+nom + ".txt");
-	std::string ligne, mot, role;
-	bool guillemets;
-	int indiceBloc, indiceMot;
-	std::string tableau[10];
-	if (flux) {
-		while (std::getline(flux, ligne)) {
-			ligne += ':';
-			mot = "";
-			role = "";
-			indiceBloc = 0;
-			indiceMot = 0;
-			guillemets = false;
-			for (int i = 0; i < ligne.length(); i++) {
-				if ((ligne[i] == ':' or ligne[i] == ',') and not guillemets) {
-					while (mot[mot.length() - 1] == ' ') mot = mot.substr(0, mot.length() - 1);
-					if (indiceBloc == 0) role = mot;
-					else tableau[indiceMot] = mot;
-					if (ligne[i] == ':') {
-						if (indiceBloc == 0) {
-							if (role == "fermer_quete") quete = nullptr;
-						} else if (indiceBloc == 1) {
-							if (role == "progression") {
-								progression->ajouterClee(tableau[0]);
-							} else if (role == "condition_objet") {
-								if (not inventaire->contient(tableau[0])) return;
-							} else if (role == "condition_saisie") {
-								if (progression->getValeur(tableau[0]) != tableau[1]) return;
-							} else if (role == "ajouter_fleche") {
-								getScene(tableau[0])->ajouterFleche(new Fleche(tableau[1], sf::Vector2f(std::stof(tableau[2]), std::stof(tableau[3])), std::stoi(tableau[4]), std::stof(tableau[5]), tableau[6]));
-								progression->ajouterClee(ligne);
-							} else if (role == "retirer_decor") {
-								getScene(tableau[0])->retirerDecor(tableau[1]);
-								progression->ajouterClee(ligne);
-							} else if (role == "retirer_inventaire") {
-								inventaire->retirerRamassable(tableau[0]);
-							}
-						}
-						indiceBloc++;
-						indiceMot = 0;
-					}
-					else if (ligne[i] == ',') indiceMot++;
-					mot = "";
+	std::vector<std::string> lignes = lireFichier("ressources/algorithmes/" + nom + ".txt");
+	std::vector<std::vector<std::string>> mots;
+	std::string role;
+	for (int i = 0; i < lignes.size(); i++) {
+		mots = lireLigne(lignes[i]);
+		for (int j = 0; j < lignes[i].size(); j++) {
+			if (j == 0) {
+				role = mots[j][0];
+				if (role == "fermer_quete") quete = nullptr;
+			}
+			else if (j == 1) {
+				if (role == "progression") {
+					progression->ajouterClee(mots[j][0]);
 				}
-				else if (ligne[i] == '"') guillemets = not guillemets;
-				else if (ligne[i] != ' ' or mot.length() > 0) mot += ligne[i];
+				else if (role == "condition_objet") {
+					if (not inventaire->contient(mots[j][0])) return;
+				}
+				else if (role == "condition_saisie") {
+					if (progression->getValeur(mots[j][0]) != mots[j][1]) return;
+				}
+				else if (role == "ajouter_fleche") {
+					getScene(mots[j][0])->ajouterFleche(new Fleche(mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3])), std::stoi(mots[j][4]), std::stof(mots[j][5]), mots[j][6]));
+					progression->ajouterClee(lignes[i]);
+				}
+				else if (role == "retirer_decor") {
+					getScene(mots[j][0])->retirerDecor(mots[j][1]);
+					progression->ajouterClee(lignes[i]);
+				}
+				else if (role == "retirer_inventaire") {
+					inventaire->retirerRamassable(mots[j][0]);
+				}
 			}
 		}
 	}
@@ -142,4 +170,16 @@ void Scene::ajouterQuete(Quete* _quete) {
 
 std::string Scene::getMusique() {
 	return musique;
+}
+
+sf::Vector2f Scene::getPositionCurseur() {
+	return positionCurseur;
+}
+
+float Scene::getAngleCurseur() {
+	return angleCurseur;
+}
+
+std::string Scene::getCarte() {
+	return carte;
 }
