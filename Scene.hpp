@@ -43,6 +43,8 @@ public:
 		chargerFichier(nom);
 	}
 	void afficherContenu(sf::RenderWindow* fenetre, sf::Vector2f echelle);
+	bool verifierCondition(std::string ligne);
+	int calculerReference(std::string nom, int ligneActuelle, std::string deplacement);
 	void executerAlgorithme(std::string nom);
 	Scene* interactionContenu(sf::Vector2i souris, bool clic, Inventaire* inventaire, sf::Event* evenementTexte);
 	std::string getNom();

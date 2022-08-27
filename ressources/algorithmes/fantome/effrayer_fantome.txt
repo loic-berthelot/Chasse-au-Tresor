@@ -1,7 +1,8 @@
-condition_objet : baton
-condition_saisie : saisie1, "fantome" 
+_objet : "lampe torche"
+si : -1 : +1 : 0
 ajouter_fleche : maison, ponton, 0.15, 0.4, -90, 1, fleche1
 ajouter_fleche : ponton, maison, 0.75, 0.4, 90, 1, fleche1
 retirer_decor : maison, fantome
 retirer_inventaire : baton
+executer : fantome/donner_monnaie
 fermer_quete
