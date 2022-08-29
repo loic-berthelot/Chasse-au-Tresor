@@ -1,4 +1,4 @@
 carte : etang.png, 0.4, 0.6, 50 
-fleche : ponton, 0.05, 0.05, 0, 2, croix1
+fleche : ponton, croix1, 0.05, 0.05, 0, 2
 ramassable : baton, 0.4, 0.4, 0, 0.5
 musique : swan_lake.ogg

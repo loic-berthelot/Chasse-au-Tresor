@@ -9,7 +9,7 @@ void Bouton::afficher(sf::RenderWindow* fenetre, sf::Vector2f _position, sf::Vec
 	dimensionsSprite = sprite.getGlobalBounds();
 	fenetre->draw(sprite);
 	sf::FloatRect dimensionsTexte = imageTexte.getGlobalBounds();
-	imageTexte.setPosition(sf::Vector2f(dimensionsSprite.left+(dimensionsSprite.width-dimensionsTexte.width)/2, dimensionsSprite.top + (dimensionsSprite.height - dimensionsTexte.height) / 2));
+	imageTexte.setPosition(sf::Vector2f(dimensionsSprite.left+(dimensionsSprite.width-dimensionsTexte.width)/2, dimensionsSprite.top + (dimensionsSprite.height - 1.8*dimensionsTexte.height)/2));
 	fenetre->draw(imageTexte);
 }
 

@@ -28,7 +28,7 @@ public:
 		police.loadFromFile("ressources/polices/arial_narrow_7.ttf");
 		imageTexte.setFont(police);
 		imageTexte.setString(texte);
-		imageTexte.setCharacterSize(24);
+		imageTexte.setCharacterSize(1.1*dimensions.width / texte.length());
 		imageTexte.setFillColor(sf::Color::Black);
 		etatClic = 0;
 	}

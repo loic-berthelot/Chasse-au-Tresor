@@ -7,7 +7,7 @@ class Scene;
 class Fleche : public Objet{
 	std::string suivant;
 public:
-	Fleche(std::string _suivant, sf::Vector2f _position, int angle = 0, float _coefTaille = 1, std::string _nom = "fleche1") {
+	Fleche(std::string _suivant, std::string _nom, sf::Vector2f _position, int angle = 0, float _coefTaille = 1) {
 		suivant = _suivant;
 		position = _position;
 		coefTaille = _coefTaille;

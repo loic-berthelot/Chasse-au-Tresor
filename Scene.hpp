@@ -10,6 +10,8 @@
 #include "Decor.hpp"
 #include "Quete.hpp"
 
+Scene* getScene(std::string nom);
+
 class Scene {
 	std::string nom;
 	std::vector<Fleche*> fleches;

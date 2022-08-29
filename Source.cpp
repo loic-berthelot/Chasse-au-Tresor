@@ -9,8 +9,7 @@
 #include "Carte.hpp"
 #include <filesystem>
 
-int largeurFenetre = 1280;
-int hauteurFenetre = 1024;
+int largeurFenetre, hauteurFenetre;
 sf::RenderWindow fenetre;
 sf::Image image;
 sf::Sprite sprite;
@@ -25,8 +24,19 @@ Progression* progression;
 std::vector<Scene*> scenes;
 sf::Music musique;
 Bouton* boutonSon;
+Bouton* boutonNouvellePartie;
+Bouton* boutonChargerPartie;
+Bouton* boutonCredits;
+Bouton* boutonAide;
+Bouton* boutonQuitter;
+Bouton* boutonRetourMenu;
 int clicFenetre;
 Carte* carte;
+std::string modeJeu;
+
+void preparerMenu() {
+	modeJeu = "menu";
+}
 
 void chargerScene(Scene* _scene) {
 	if (_scene != scene) {
@@ -37,10 +47,11 @@ void chargerScene(Scene* _scene) {
 		sf::Vector2f taille = sf::Vector2f(texture.getSize().x, texture.getSize().y);
 		echelle = sf::Vector2f((largeurFenetre-largeurInventaire)/taille.x, hauteurFenetre/taille.y);
 		sprite.setScale(echelle.x, echelle.y);
+		
 		if (scene->getMusique() == "stop") musique.stop();
-		else if (scene->getMusique() != "") {
-			musique.openFromFile("ressources/sons/"+scene->getMusique());
-			musique.play();
+		else if (scene->getMusique() != "") {/// and musique.getStatus() == sf::Music::Playing) {
+			std::cout << scene->getMusique();
+			if(musique.openFromFile("ressources/sons/" + scene->getMusique())) musique.play();		
 		}
 		if (scene->getCarte() != "") {
 			carte->changerCarte(scene->getCarte());			
@@ -53,22 +64,28 @@ void initialisation() {
 	musique.setLoop(true);
 	progression = new Progression();
 	largeurInventaire = 250;
+	largeurFenetre = sf::VideoMode::getDesktopMode().width;
+	hauteurFenetre = sf::VideoMode::getDesktopMode().height;
 	fenetre.create(sf::VideoMode(largeurFenetre, hauteurFenetre), "Chasse au Trésor", sf::Style::Fullscreen);
 	inventaire = new Inventaire(sf::Vector2f(largeurInventaire, hauteurFenetre));
 
 	boutonSon = new Bouton("son", "sonOn", sf::Vector2f(30, 30));
+	boutonNouvellePartie = new Bouton("menu_nouvelle_partie", "menu_nouvelle_partie", sf::Vector2f(0, 0));
+	boutonChargerPartie = new Bouton("menu_charger_partie", "menu_charger_partie", sf::Vector2f(0, 0));
+	boutonCredits = new Bouton("menu_credits", "menu_credits", sf::Vector2f(0, 0));
+	boutonAide = new Bouton("menu_aide", "menu_aide", sf::Vector2f(0, 0));
+	boutonQuitter = new Bouton("menu_quitter", "menu_quitter", sf::Vector2f(0, 0));
+	boutonRetourMenu = new Bouton("retour_menu", "retour_menu", sf::Vector2f(0, 0));
 
 	std::string nom;
-	Scene* depart = nullptr;
 	for (const auto& file : std::filesystem::directory_iterator("./ressources/scenes")) {
 		nom = file.path().string();
 		nom = nom.substr(20, nom.size() - 24);
-		if (nom == "depart") depart = new Scene(nom);
-		else new Scene(nom);
+		new Scene(nom);
 	}
 	carte = new Carte();
-	chargerScene(depart);
 	clicFenetre = 0;
+	preparerMenu();
 }
 
 void sauvegarder(std::string fichier) {
@@ -110,26 +127,68 @@ int main() {
 		sf::Vector2i souris = sf::Mouse::getPosition(fenetre);
 		bool clic = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
 		progressionEtatsClic(clicFenetre, clic, true);
-		fenetre.draw(sprite);
-		Scene* _scene = scene->interactionContenu(souris, clic, inventaire, evenementTexte);
-		chargerScene(_scene);
-		scene->afficherContenu(&fenetre, echelle);
-		inventaire->afficher(&fenetre, sf::Vector2f(largeurFenetre - largeurInventaire, 0));
-		boutonSon->afficher(&fenetre, sf::Vector2f(0,0));
-		if (boutonSon->interactionSouris(souris, clic)) {
-			if (boutonSon->getType() == "sonOn") {
-				boutonSon->changerType("sonOff");
-				musique.setVolume(0);
+		
+		
+		
+		if (modeJeu == "menu") {
+			fenetre.clear(sf::Color(150, 50, 0));
+			boutonNouvellePartie->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2 - 300));
+			boutonChargerPartie->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2 - 150));
+			boutonCredits->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2));
+			boutonAide->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2 + 150));
+			boutonQuitter->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2 + 300));
+			if (boutonNouvellePartie->interactionSouris(souris, clic)) {
+				chargerScene(getScene("depart"));
+				modeJeu = "jeu";
 			}
-			else {
-				boutonSon->changerType("sonOn");
-				musique.setVolume(100);
+			if (boutonChargerPartie->interactionSouris(souris, clic)) {
+				chargerScene(getScene("depart"));
+				modeJeu = "jeu";
+			}
+			if (boutonCredits->interactionSouris(souris, clic)) {
+				modeJeu = "credits";
+			}
+			if (boutonAide->interactionSouris(souris, clic)) {
+				modeJeu = "aide";
+			}
+			if (boutonQuitter->interactionSouris(souris, clic)) {
+				fenetre.close();
+				return 0;
 			}
 		}
-		carte->afficher(&fenetre);
+		else if (modeJeu == "credits" or modeJeu == "aide") {
+			fenetre.clear(sf::Color(150, 50, 0));
+			boutonRetourMenu->afficher(&fenetre, sf::Vector2f(50, 50));
+			if (boutonRetourMenu->interactionSouris(souris, clic)) modeJeu = "menu";
+			if (modeJeu == "credits") {
+
+			}
+			else {
+
+			}
+		}
+		else if (modeJeu == "jeu") {
+			fenetre.clear();
+			fenetre.draw(sprite);
+			Scene* _scene = scene->interactionContenu(souris, clic, inventaire, evenementTexte);
+			chargerScene(_scene);
+			scene->afficherContenu(&fenetre, echelle);
+			inventaire->afficher(&fenetre, sf::Vector2f(largeurFenetre - largeurInventaire, 0));
+			boutonSon->afficher(&fenetre, sf::Vector2f(0, 0));
+			if (boutonSon->interactionSouris(souris, clic)) {
+				if (boutonSon->getType() == "sonOn") {
+					boutonSon->changerType("sonOff");
+					musique.setVolume(0);
+				}
+				else {
+					boutonSon->changerType("sonOn");
+					musique.setVolume(100);
+				}
+			}
+			carte->afficher(&fenetre);
+			sauvegarder("sauvegarde1");
+		}
 		fenetre.display();
-		fenetre.clear();
-		sauvegarder("sauvegarde1");
 	}
 	return 0;
 }

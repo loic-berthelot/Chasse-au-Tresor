@@ -1,4 +1,3 @@
-texte : "Je suis un fantome. Craignez moi !", 80, 120
-saisie : saisie1, 200, 400, 200, 50
-bouton : fantome/effrayer_fantome, texte1, 100, -50, "Bouh !"
-texte : "AAAAAA", 150, 300
+texte : "Il vous faut une lampe torche pour effrayer ce fantome.", 80, 120
+bouton : fantome/bouton_effrayer, texte1, 100, -50, "Effrayer le fantome"
+bouton : fantome/bouton_payer, texte2, 270, -50, "Payer"

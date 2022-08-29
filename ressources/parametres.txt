@@ -1,0 +1,2 @@
+depart : depart
+arrivee : arrivee1, arrivee2

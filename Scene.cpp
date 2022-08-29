@@ -22,10 +22,9 @@ void Scene::chargerFichier(std::string nom) {
 			if (j == 0) role = mots[j][0];
 			else if (j == 1) {
 				if (role == "fleche") {
-					if (mots[j].size() < 4) ajouterFleche(new Fleche(mots[j][0], sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2]))));
-					else if (mots[j].size() < 5) ajouterFleche(new Fleche(mots[j][0], sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2])), std::stoi(mots[j][3])));
-					else if (mots[j].size() < 6) ajouterFleche(new Fleche(mots[j][0], sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2])), std::stoi(mots[j][3]), std::stof(mots[j][4])));
-					else ajouterFleche(new Fleche(mots[j][0], sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2])), std::stoi(mots[j][3]), std::stof(mots[j][4]), mots[j][5]));
+					if (mots[j].size() < 5) ajouterFleche(new Fleche(mots[j][0], mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3]))));
+					else if (mots[j].size() < 6) ajouterFleche(new Fleche(mots[j][0], mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3])), std::stoi(mots[j][4])));
+					else ajouterFleche(new Fleche(mots[j][0], mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3])), std::stoi(mots[j][4]), stof(mots[j][5])));
 				}
 				else if (role == "ramassable" or role == "monnaie") {
 					if (mots[j].size() < 2) ajouterRamassable(new Ramassable(mots[j][0]));
@@ -40,9 +39,6 @@ void Scene::chargerFichier(std::string nom) {
 				}
 				else if (role == "musique") {
 					musique = mots[j][0];
-				}
-				else if (role == "position") {
-					positionCurseur = sf::Vector2f(std::stof(mots[j][0]), std::stof(mots[j][1]));
 				}
 				else if (role == "carte") {
 					carte = mots[j][0];
@@ -69,9 +65,9 @@ int Scene::calculerReference(std::string nom, int ligneActuelle, std::string dep
 		}
 		return 0;
 	}
-	else if (deplacement[0] == '+') return ligneActuelle + std::stoi(deplacement.substr(1, deplacement.size() - 1));
-	else if (deplacement[0] == '-') return ligneActuelle - std::stoi(deplacement.substr(1, deplacement.size() - 1));
-	else return std::stoi(deplacement);
+	if (deplacement[0] == '+') return ligneActuelle + std::stoi(deplacement.substr(1, deplacement.size() - 1));
+	if (deplacement[0] == '-') return ligneActuelle - std::stoi(deplacement.substr(1, deplacement.size() - 1));
+	return std::stoi(deplacement)-1;
 }
 
 bool Scene::verifierCondition(std::string ligne) {
@@ -89,10 +85,10 @@ void Scene::executerAlgorithme(std::string nom) {
 	std::vector<std::vector<std::string>> mots;
 	std::string role;
 	int i, i2;
-	i = 1;
-	while (0 < i and i <= lignes.size()) {
-		mots = lireLigne(lignes[i - 1]);
-		i2 = i + 1;
+	i = 0;
+	while (0 <= i and i < lignes.size()) {
+		mots = lireLigne(lignes[i]);
+		i2 = i+1;
 		if (mots[0][0][0] == '@') {
 			role = mots[0][1];
 		}
@@ -138,7 +134,7 @@ void Scene::executerAlgorithme(std::string nom) {
 			i2 = std::stoi(mots[1][0]);
 		}
 		else if (role == "ajouter_fleche") {
-			getScene(mots[1][0])->ajouterFleche(new Fleche(mots[1][1], sf::Vector2f(std::stof(mots[1][2]), std::stof(mots[1][3])), std::stoi(mots[1][4]), std::stof(mots[1][5]), mots[1][6]));
+			getScene(mots[1][0])->ajouterFleche(new Fleche(mots[1][1], mots[1][2], sf::Vector2f(std::stof(mots[1][3]), std::stof(mots[1][4])), std::stoi(mots[1][5]), std::stof(mots[1][6])));
 			progression->ajouterClee(lignes[i]);
 		}
 		else if (role == "ajouter_monnaie") {

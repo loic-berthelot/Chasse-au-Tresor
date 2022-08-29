@@ -28,23 +28,18 @@ public:
 		std::string role;
 		for (int i = 0; i < lignes.size(); i++) {
 			mots = lireLigne(lignes[i]);
-			for (int j = 0; j < mots.size(); j++) {
-				if (j == 0) role = mots[j][0];
-				else if (j == 1) {
-					if (role == "texte") {
-						imageTexte.setString(mots[j][0]);
-						imageTexte.setPosition(sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2])));
-						textes.push_back(imageTexte);
-					} else if (role == "saisie") {
-						boutons.push_back(new BarreSaisie(mots[j][0], sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2])), sf::Vector2f(std::stof(mots[j][3]), std::stof(mots[j][4]))));
-					}
-					else if (role == "bouton") {
-						if (mots[j].size() < 5) boutons.push_back(new Bouton(mots[j][0], mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3]))));
-						else boutons.push_back(new Bouton(mots[j][0], mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3])), mots[j][4]));
-					}
-				}
-				
+			role = mots[0][0];
+			if (role == "texte") {
+				imageTexte.setString(mots[1][0]);
+				imageTexte.setPosition(sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2])));
+				textes.push_back(imageTexte);
+			} else if (role == "saisie") {
+				boutons.push_back(new BarreSaisie(mots[1][0], sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2])), sf::Vector2f(std::stof(mots[1][3]), std::stof(mots[1][4]))));
 			}
+			else if (role == "bouton") {
+				if (mots[1].size() < 5) boutons.push_back(new Bouton(mots[1][0], mots[1][1], sf::Vector2f(std::stof(mots[1][2]), std::stof(mots[1][3]))));
+				else boutons.push_back(new Bouton(mots[1][0], mots[1][1], sf::Vector2f(std::stof(mots[1][2]), std::stof(mots[1][3])), mots[1][4]));
+			}				
 		}
 		boutonFermer = new Bouton("fermer", "fermer", sf::Vector2f(35, 35));
 		ajouterBouton(boutonFermer);

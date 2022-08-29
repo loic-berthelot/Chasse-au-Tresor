@@ -3,7 +3,6 @@
 #include <vector>
 #include <iostream>
 
-
 class Scene;
 
 class Progression {
