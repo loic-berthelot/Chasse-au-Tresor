@@ -41,6 +41,11 @@ int Inventaire::getMonnaie() {
 	return monnaie;
 }
 
+void Inventaire::setMonnaie(int _monnaie) {
+	monnaie = _monnaie;
+	imageTexte.setString(std::to_string(monnaie));
+}
+
 void Inventaire::ajouterMonnaie(int valeur) {
 	monnaie += valeur;
 	imageTexte.setString(std::to_string(monnaie));

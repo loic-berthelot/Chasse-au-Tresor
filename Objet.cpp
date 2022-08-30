@@ -44,6 +44,14 @@ std::string Objet::getNom() {
 	return nom;
 }
 
+sf::Vector2f Objet::getPosition() {
+	return position;
+}
+
 sf::Sprite Objet::retournerSprite() {
 	return sprite;
+}
+
+std::string Objet::getDescription() {
+	return nom;
 }

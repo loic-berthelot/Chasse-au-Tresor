@@ -43,6 +43,7 @@ public:
 	void retirerRamassable(std::string nom);
 	bool contient(std::string nom);
 	int getMonnaie();
+	void setMonnaie(int _monnaie);
 	void ajouterMonnaie(int valeur);
 	bool acheter(int valeur);
 	int taillePlaces();

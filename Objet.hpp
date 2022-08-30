@@ -19,5 +19,7 @@ public:
 	void setPosition(sf::Vector2f _position);
 	void afficher(sf::RenderWindow* fenetre);
 	std::string getNom();
+	sf::Vector2f getPosition();
 	sf::Sprite retournerSprite();
+	std::string getDescription();
 };

@@ -33,6 +33,8 @@ Bouton* boutonRetourMenu;
 int clicFenetre;
 Carte* carte;
 std::string modeJeu;
+sf::Text texte;
+sf::Font police;
 
 void preparerMenu() {
 	modeJeu = "menu";
@@ -68,6 +70,8 @@ void initialisation() {
 	hauteurFenetre = sf::VideoMode::getDesktopMode().height;
 	fenetre.create(sf::VideoMode(largeurFenetre, hauteurFenetre), "Chasse au Trésor", sf::Style::Fullscreen);
 	inventaire = new Inventaire(sf::Vector2f(largeurInventaire, hauteurFenetre));
+	police.loadFromFile("ressources/polices/arial_narrow_7.ttf");
+	texte.setFont(police);
 
 	boutonSon = new Bouton("son", "sonOn", sf::Vector2f(30, 30));
 	boutonNouvellePartie = new Bouton("menu_nouvelle_partie", "menu_nouvelle_partie", sf::Vector2f(0, 0));
@@ -77,23 +81,56 @@ void initialisation() {
 	boutonQuitter = new Bouton("menu_quitter", "menu_quitter", sf::Vector2f(0, 0));
 	boutonRetourMenu = new Bouton("retour_menu", "retour_menu", sf::Vector2f(0, 0));
 
-	std::string nom;
-	for (const auto& file : std::filesystem::directory_iterator("./ressources/scenes")) {
-		nom = file.path().string();
-		nom = nom.substr(20, nom.size() - 24);
-		new Scene(nom);
-	}
 	carte = new Carte();
 	clicFenetre = 0;
 	preparerMenu();
 }
 
+void preparerScenes(bool remplir) {
+	std::string nom;
+	for (const auto& file : std::filesystem::directory_iterator("./ressources/scenes")) {
+		nom = file.path().string();
+		nom = nom.substr(20, nom.size() - 24);
+		new Scene(nom, remplir);
+	}
+}
+
 void sauvegarder(std::string fichier) {
 	std::ofstream flux("sauvegardes/"+fichier+".txt");
+	flux << inventaire->getMonnaie() << std::endl;
 	flux << inventaire->taillePlaces() << std::endl;
 	for (int i = 0; i < inventaire->taillePlaces(); i++) flux << inventaire->nomRamassable(i) << std::endl;
-	flux << progression->tailleClees() << std::endl;
-	for (int i = 0; i < progression->tailleClees(); i++) flux << progression->nomClee(i) << std::endl;
+	for (int i = 0; i < scenes.size(); i++) {
+		flux << scenes[i]->tailleFleches() << std::endl;
+		for (int j = 0; j < scenes[i]->tailleFleches(); j++) flux << scenes[i]->getDescription("fleche", j)<<std::endl;
+		flux << scenes[i]->tailleRamassables() << std::endl;
+		for (int j = 0; j < scenes[i]->tailleFleches(); j++) flux << scenes[i]->getDescription("ramassable", j) << std::endl;
+		flux << scenes[i]->tailleDecors() << std::endl;
+		for (int j = 0; j < scenes[i]->tailleFleches(); j++) flux << scenes[i]->getDescription("decor", j) << std::endl;
+	}	
+}
+
+void chargerSauvegarde(std::string fichier) {
+	int indexLigne, x;
+	std::string nomScene;
+	std::vector<std::string> lignes = lireFichier("sauvegardes/" + fichier + ".txt");
+	inventaire->setMonnaie(std::stoi(lignes[0]));
+	indexLigne = 1;
+	x = std::stoi(lignes[indexLigne]);	
+	while (x > 0) {
+		indexLigne++;
+		inventaire->ajouterRamassable(new Ramassable(lignes[indexLigne]));
+		x--;
+	}
+	indexLigne++;
+	nomScene = lignes[indexLigne];
+	indexLigne++;
+	x = std::stoi(lignes[indexLigne]);
+	while (x > 0) {
+		indexLigne++;
+		getScene(nomScene)->chargerLigneFichier(lignes[indexLigne], true);
+		x--;
+	}
 }
 
 int main() { 
@@ -138,11 +175,14 @@ int main() {
 			boutonAide->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2 + 150));
 			boutonQuitter->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2 + 300));
 			if (boutonNouvellePartie->interactionSouris(souris, clic)) {
-				chargerScene(getScene("depart"));
+				preparerScenes(true);
+				chargerScene(getScene("depart"));				
 				modeJeu = "jeu";
 			}
 			if (boutonChargerPartie->interactionSouris(souris, clic)) {
+				preparerScenes(false);
 				chargerScene(getScene("depart"));
+				chargerSauvegarde("sauvegarde1");
 				modeJeu = "jeu";
 			}
 			if (boutonCredits->interactionSouris(souris, clic)) {
@@ -160,11 +200,23 @@ int main() {
 			fenetre.clear(sf::Color(150, 50, 0));
 			boutonRetourMenu->afficher(&fenetre, sf::Vector2f(50, 50));
 			if (boutonRetourMenu->interactionSouris(souris, clic)) modeJeu = "menu";
+			texte.setFillColor(sf::Color::White);
+			texte.setPosition(sf::Vector2f(80, 80));
+			texte.setCharacterSize(35);
 			if (modeJeu == "credits") {
-
+				texte.setString("Code : Loïc Berthelot");
+				fenetre.draw(texte);
+				texte.setCharacterSize(28);
+				texte.setPosition(sf::Vector2f(80, 180));
+				std::string contenuTexte = "";
+				std::vector<std::string> lignes = lireFichier("ressources/credits.txt");
+				for (int i = 0; i < lignes.size(); i++) contenuTexte += lignes[i]+"\n";
+				texte.setString(contenuTexte);
+				fenetre.draw(texte);
 			}
 			else {
-
+				texte.setString("Les instructions pour creer le jeu se trouvent dans le fichier lisez-moi.odt \ndans le dossier ressources.");
+				fenetre.draw(texte);
 			}
 		}
 		else if (modeJeu == "jeu") {
