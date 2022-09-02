@@ -1,4 +1,4 @@
-ajouter_fleche : maison, ponton, fleche1, 0.15, 0.4, -90, 1
-ajouter_fleche : ponton, maison, fleche1, 0.75, 0.4, 90, 1
-retirer_decor : maison, fantome
+fleche, maison : ponton, fleche1, 0.15, 0.4, -90, 1
+fleche, ponton : maison, fleche1, 0.75, 0.4, 90, 1
+retirer_decor, maison : fantome
 fermer_quete

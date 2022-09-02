@@ -51,7 +51,3 @@ sf::Vector2f Objet::getPosition() {
 sf::Sprite Objet::retournerSprite() {
 	return sprite;
 }
-
-std::string Objet::getDescription() {
-	return nom;
-}

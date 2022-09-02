@@ -10,3 +10,7 @@ void Ramassable::formaterCase(int tailleCases) {
 bool Ramassable::estMonnaie() {
 	return monnaie;
 }
+
+std::string Ramassable::getDescription() {
+	return "ramassable : " + nom + ", " + std::to_string(position.x) + ", " + std::to_string(position.y) + ", " + std::to_string(rotation) + ", " + std::to_string(coefTaille);
+}

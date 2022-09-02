@@ -6,12 +6,12 @@ void Inventaire::afficher(sf::RenderWindow* fenetre, sf::Vector2f position) {
 	piece.setPosition(sf::Vector2f(position.x + 10, position.y + 10));
 	fenetre->draw(piece);
 	imageTexte.setPosition(sf::Vector2f(position.x+80, position.y+10));
-	fenetre->draw(imageTexte);	
+	fenetre->draw(imageTexte);
+	Ramassable* ramassable;	
 	for (int i = 0; i < places; i++) {
 		rectangle.setPosition(sf::Vector2f(position.x+10+ (tailleCases + 7) *(i%4), position.y+80+ (tailleCases + 7) *std::floor(i/4)));
 		fenetre->draw(rectangle);
-		Ramassable* ramassable;
-		if (i < ramassables.size()) {
+		if (i < ramassables.size()) {			
 			ramassable = ramassables[i];
 			ramassable->setPosition(sf::Vector2f(position.x + 10 + tailleCases/2 + (tailleCases+7) * (i % 4), position.y + 80 + tailleCases / 2 +(tailleCases + 7) * std::floor(i / 4)));
 			fenetre->draw(ramassable->retournerSprite());

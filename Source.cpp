@@ -100,18 +100,19 @@ void sauvegarder(std::string fichier) {
 	flux << inventaire->getMonnaie() << std::endl;
 	flux << inventaire->taillePlaces() << std::endl;
 	for (int i = 0; i < inventaire->taillePlaces(); i++) flux << inventaire->nomRamassable(i) << std::endl;
+	flux << scene->getNom() << std::endl;
+	flux<< scenes.size()<<std::endl;
 	for (int i = 0; i < scenes.size(); i++) {
-		flux << scenes[i]->tailleFleches() << std::endl;
+		flux << scenes[i]->getNom() << std::endl;
+		flux << scenes[i]->tailleFleches()+ scenes[i]->tailleRamassables() + scenes[i]->tailleDecors() << std::endl;
 		for (int j = 0; j < scenes[i]->tailleFleches(); j++) flux << scenes[i]->getDescription("fleche", j)<<std::endl;
-		flux << scenes[i]->tailleRamassables() << std::endl;
-		for (int j = 0; j < scenes[i]->tailleFleches(); j++) flux << scenes[i]->getDescription("ramassable", j) << std::endl;
-		flux << scenes[i]->tailleDecors() << std::endl;
-		for (int j = 0; j < scenes[i]->tailleFleches(); j++) flux << scenes[i]->getDescription("decor", j) << std::endl;
+		for (int j = 0; j < scenes[i]->tailleRamassables(); j++) flux << scenes[i]->getDescription("ramassable", j) << std::endl;
+		for (int j = 0; j < scenes[i]->tailleDecors(); j++) flux << scenes[i]->getDescription("decor", j) << std::endl;
 	}	
 }
 
 void chargerSauvegarde(std::string fichier) {
-	int indexLigne, x;
+	int indexLigne, x, y;
 	std::string nomScene;
 	std::vector<std::string> lignes = lireFichier("sauvegardes/" + fichier + ".txt");
 	inventaire->setMonnaie(std::stoi(lignes[0]));
@@ -123,12 +124,13 @@ void chargerSauvegarde(std::string fichier) {
 		x--;
 	}
 	indexLigne++;
-	nomScene = lignes[indexLigne];
+	chargerScene(getScene(lignes[indexLigne]));
 	indexLigne++;
 	x = std::stoi(lignes[indexLigne]);
 	while (x > 0) {
 		indexLigne++;
-		getScene(nomScene)->chargerLigneFichier(lignes[indexLigne], true);
+		nomScene = lignes[indexLigne];
+		executerLigne(lignes[indexLigne]);
 		x--;
 	}
 }
@@ -155,6 +157,9 @@ int main() {
 						pleinEcran = not pleinEcran;
 					}
 				}
+				else if (evenement.key.code == sf::Keyboard::S) {
+					sauvegarder("sauvegarde1");
+				}
 			} 
 			if (evenement.type == sf::Event::KeyReleased) {
 				if (evenement.key.code == sf::Keyboard::Escape) toucheEchapPressee = false;
@@ -164,8 +169,6 @@ int main() {
 		sf::Vector2i souris = sf::Mouse::getPosition(fenetre);
 		bool clic = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
 		progressionEtatsClic(clicFenetre, clic, true);
-		
-		
 		
 		if (modeJeu == "menu") {
 			fenetre.clear(sf::Color(150, 50, 0));
@@ -238,7 +241,6 @@ int main() {
 				}
 			}
 			carte->afficher(&fenetre);
-			sauvegarder("sauvegarde1");
 		}
 		fenetre.display();
 	}

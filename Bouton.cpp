@@ -4,7 +4,7 @@ void Bouton::afficher(sf::RenderWindow* fenetre, sf::Vector2f _position, sf::Vec
 	sf::FloatRect dimensionsSprite = sprite.getGlobalBounds();
 	sf::Vector2f position(_position.x + positionRelative.x, _position.y + positionRelative.y);
 	if (positionRelative.x < 0) position.x += dimensionsCadre.x;
-	if (positionRelative.y < 0) position.y += dimensionsCadre.x;
+	if (positionRelative.y < 0) position.y += dimensionsCadre.y;
 	sprite.setPosition(position);
 	dimensionsSprite = sprite.getGlobalBounds();
 	fenetre->draw(sprite);

@@ -6,7 +6,7 @@ protected:
 	sf::Sprite sprite;
 	sf::Vector2f position;
 	sf::Texture texture;
-	float rayon, coefTaille;
+	float rayon, coefTaille, rotation;
 	std::string nom;
 	int etatClic = 0;
 public:
@@ -21,5 +21,4 @@ public:
 	std::string getNom();
 	sf::Vector2f getPosition();
 	sf::Sprite retournerSprite();
-	std::string getDescription();
 };

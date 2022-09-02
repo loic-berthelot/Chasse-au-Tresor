@@ -13,6 +13,7 @@
 Scene* getScene(std::string nom);
 bool verifierCondition(std::string ligne);
 int calculerReference(std::vector<std::string> _lignes, int ligneActuelle, std::string deplacement);
+void executerLigne(std::string ligne);
 void executerAlgorithme(std::vector<std::string> _lignes);
 void executerAlgorithme(std::string nom);
 
@@ -29,7 +30,7 @@ class Scene {
 	sf::Vector2f positionCurseur;
 	float angleCurseur;
 public:
-	void chargerLigneFichier(std::string ligne, bool remplir);
+	void executerLigne(std::string ligne, bool remplir);
 	void chargerFichier(std::string nom, bool remplir);
 	Scene(std::string _nom, std::vector<Fleche*> _fleches) {
 		nom = _nom;

@@ -34,19 +34,35 @@ bool verifierCondition(std::string ligne) {
 	if (role == "_monnaie") return inventaire->getMonnaie() >= std::stoi(mots[1][0]);
 }
 
+void executerLigne(std::string ligne) {
+	std::vector<std::vector<std::string>> mots;
+	std::string role, nomScene;
+	mots = lireLigne(ligne);
+	if (mots.size() > 0) {
+		nomScene = "";
+		if (mots[0][0][0] == '@') {
+			role = mots[0][1];
+			if (mots[0].size() >= 3) nomScene = mots[0][2];
+		}
+		else {
+			role = mots[0][0];
+			if (mots[0].size() >= 2) nomScene = mots[0][1];
+		}
+		if (nomScene != "") getScene(nomScene)->executerLigne(ligne, true);
+	}
+}
+
 void executerAlgorithme(std::vector<std::string> _lignes) {
-	std::cout << _lignes[0]<<std::endl;
 	std::vector<std::string> lignes = _lignes;
 	std::vector<std::vector<std::string>> mots;
-	std::string role;
+	std::string role, nomScene;
 	int i, i2;
 	i = 0;
 	while (0 <= i and i < lignes.size()) {
 		mots = lireLigne(lignes[i]);
 		i2 = i + 1;
-		if (mots[0][0][0] == '@') {
-			role = mots[0][1];
-		}
+		nomScene = "";
+		if (mots[0][0][0] == '@') role = mots[0][1];
 		else role = mots[0][0];
 		if (role == "fermer_quete") {
 			quete = nullptr;
@@ -85,83 +101,72 @@ void executerAlgorithme(std::vector<std::string> _lignes) {
 		else if (role == "aller") {
 			i2 = std::stoi(mots[1][0]);
 		}
-		else if (role == "ajouter_fleche") {
-			getScene(mots[1][0])->ajouterFleche(new Fleche(mots[1][1], mots[1][2], sf::Vector2f(std::stof(mots[1][3]), std::stof(mots[1][4])), std::stoi(mots[1][5]), std::stof(mots[1][6])));
-		}
-		else if (role == "ajouter_ramassable") {
-			getScene(mots[1][0])->ajouterRamassable(new Ramassable(mots[1][1], sf::Vector2f(std::stof(mots[1][2]), std::stof(mots[1][3])), std::stoi(mots[1][4]), std::stof(mots[1][5])));
-		}
-		else if (role == "ajouter_monnaie") {
-			getScene(mots[1][0])->ajouterRamassable(new Monnaie(mots[1][1], sf::Vector2f(std::stof(mots[1][2]), std::stof(mots[1][3])), std::stoi(mots[1][4]), std::stof(mots[1][5])));
-		}		
-		else if (role == "retirer_decor") {
-			getScene(mots[1][0])->retirerDecor(mots[1][1]);
-		}
-		else if (role == "retirer_ramassable" or role == "retirer_monnaie") {
-			if (mots[1].size() == 1) getScene(mots[1][0])->retirerRamassable(mots[1][1]);
-			else getScene(mots[1][0])->retirerRamassable(mots[1][1], sf::Vector2f(std::stof(mots[1][2]), std::stof(mots[1][3])));
-		}
-		else if (role == "gagner_monnaie") {
-			inventaire->ajouterMonnaie(std::stoi(mots[1][0]));
-		}
-		else if (role == "ajouter_inventaire") {
-			inventaire->ajouterRamassable(new Ramassable(mots[1][0]));
-		}
-		else if (role == "retirer_inventaire") {
-			inventaire->retirerRamassable(mots[1][0]);
-		}
+		else executerLigne(lignes[i]);
 		i = i2;
 	}
 }
-
 
 void executerAlgorithme(std::string nom) {
 	executerAlgorithme(lireFichier("ressources/algorithmes/" + nom + ".txt"));
 }
 
-void Scene::chargerLigneFichier(std::string ligne, bool remplir) {
+void Scene::chargerFichier(std::string nom, bool remplir) {
+	std::vector<std::string> lignes = lireFichier("ressources/scenes/" + nom + ".txt");
+	for (int i = 0; i < lignes.size(); i++) {
+		executerLigne(lignes[i], remplir);
+	}
+}
+
+void Scene::executerLigne(std::string ligne, bool remplir) {
 	musique = "";
 	carte = "";
 	std::vector<std::vector<std::string>> mots;
 	std::string role;
 	mots = lireLigne(ligne);
-	for (int j = 0; j < mots.size(); j++) {
-		if (j == 0) role = mots[j][0];
-		else if (j == 1) {
-			if (remplir) {
-				if (role == "fleche") {
-					if (mots[j].size() < 5) ajouterFleche(new Fleche(mots[j][0], mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3]))));
-					else if (mots[j].size() < 6) ajouterFleche(new Fleche(mots[j][0], mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3])), std::stoi(mots[j][4])));
-					else ajouterFleche(new Fleche(mots[j][0], mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3])), std::stoi(mots[j][4]), stof(mots[j][5])));
-				}
-				else if (role == "ramassable" or role == "monnaie") {
-					if (mots[j].size() < 2) ajouterRamassable(new Ramassable(mots[j][0]));
-					else if (mots[j].size() < 4) ajouterRamassable(new Ramassable(mots[j][0], sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2]))));
-					else if (mots[j].size() < 5) ajouterRamassable(new Ramassable(mots[j][0], sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2])), std::stof(mots[j][3])));
-					else ajouterRamassable(new Ramassable(mots[j][0], sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2])), std::stof(mots[j][3]), std::stof(mots[j][4])));
-				}
-				else if (role == "decor") {
-					if (mots[j].size() < 5) ajouterDecor(new Decor(mots[j][0], mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3]))));
-					else if (mots[j].size() < 6) ajouterDecor(new Decor(mots[j][0], mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3])), std::stoi(mots[j][4])));
-					else ajouterDecor(new Decor(mots[j][0], mots[j][1], sf::Vector2f(std::stof(mots[j][2]), std::stof(mots[j][3])), std::stoi(mots[j][4]), std::stof(mots[j][5])));
-				}
-			}
-			else if (role == "musique") {
-				musique = mots[j][0];
-			}
-			else if (role == "carte") {
-				carte = mots[j][0];
-				positionCurseur = sf::Vector2f(std::stof(mots[j][1]), std::stof(mots[j][2]));
-				angleCurseur = std::stof(mots[j][3]);
-			}
+	if (mots[0][0][0] == '@') role = mots[0][1];
+	else role = mots[0][0];
+	if (remplir) {
+		if (role == "fleche") {
+			if (mots[1].size() < 5) ajouterFleche(new Fleche(mots[1][0], mots[1][1], sf::Vector2f(std::stof(mots[1][2]), std::stof(mots[1][3]))));
+			else if (mots[1].size() < 6) ajouterFleche(new Fleche(mots[1][0], mots[1][1], sf::Vector2f(std::stof(mots[1][2]), std::stof(mots[1][3])), std::stoi(mots[1][4])));
+			else ajouterFleche(new Fleche(mots[1][0], mots[1][1], sf::Vector2f(std::stof(mots[1][2]), std::stof(mots[1][3])), std::stoi(mots[1][4]), stof(mots[1][5])));
+		}
+		else if (role == "ramassable" or role == "monnaie") {
+			if (mots[1].size() < 2) ajouterRamassable(new Ramassable(mots[1][0]));
+			else if (mots[1].size() < 4) ajouterRamassable(new Ramassable(mots[1][0], sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2]))));
+			else if (mots[1].size() < 5) ajouterRamassable(new Ramassable(mots[1][0], sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2])), std::stof(mots[1][3])));
+			else ajouterRamassable(new Ramassable(mots[1][0], sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2])), std::stof(mots[1][3]), std::stof(mots[1][4])));
+		}
+		else if (role == "decor") {
+			if (mots[1].size() < 5) ajouterDecor(new Decor(mots[1][0], mots[1][1], sf::Vector2f(std::stof(mots[1][2]), std::stof(mots[1][3]))));
+			else if (mots[1].size() < 6) ajouterDecor(new Decor(mots[1][0], mots[1][1], sf::Vector2f(std::stof(mots[1][2]), std::stof(mots[1][3])), std::stoi(mots[1][4])));
+			else ajouterDecor(new Decor(mots[1][0], mots[1][1], sf::Vector2f(std::stof(mots[1][2]), std::stof(mots[1][3])), std::stoi(mots[1][4]), std::stof(mots[1][5])));
 		}
 	}
-}
-
-void Scene::chargerFichier(std::string nom, bool remplir) {
-	std::vector<std::string> lignes = lireFichier("ressources/scenes/" + nom + ".txt");
-	for (int i = 0; i < lignes.size(); i++) {
-		chargerLigneFichier(lignes[i], remplir);
+	if (role == "musique") {
+		musique = mots[1][0];
+	}
+	else if (role == "carte") {
+		carte = mots[1][0];
+		positionCurseur = sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2]));
+		angleCurseur = std::stof(mots[1][3]);
+	}
+	else if (role == "retirer_decor") {
+		retirerDecor(mots[1][0]);
+	}
+	else if (role == "retirer_ramassable" or role == "retirer_monnaie") {
+		if (mots[1].size() == 1) retirerRamassable(mots[0][1]);
+		else retirerRamassable(mots[1][0], sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2])));
+	}
+	else if (role == "gagner_monnaie") {
+		inventaire->ajouterMonnaie(std::stoi(mots[1][0]));
+	}
+	else if (role == "ajouter_inventaire") {
+		inventaire->ajouterRamassable(new Ramassable(mots[1][0]));
+	}
+	else if (role == "retirer_inventaire") {
+		std::cout<<"ok"<<std::endl;
+		inventaire->retirerRamassable(mots[1][0]);
 	}
 }
 
