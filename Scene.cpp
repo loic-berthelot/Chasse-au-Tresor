@@ -35,6 +35,7 @@ bool verifierCondition(std::string ligne) {
 }
 
 void executerLigne(std::string ligne) {
+	std::cout << ligne<<std::endl;
 	std::vector<std::vector<std::string>> mots;
 	std::string role, nomScene;
 	mots = lireLigne(ligne);
@@ -49,6 +50,7 @@ void executerLigne(std::string ligne) {
 			if (mots[0].size() >= 2) nomScene = mots[0][1];
 		}
 		if (nomScene != "") getScene(nomScene)->executerLigne(ligne, true);
+		else getScene("depart")->executerLigne(ligne, true);
 	}
 }
 
