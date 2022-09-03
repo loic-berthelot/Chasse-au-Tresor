@@ -1,4 +1,0 @@
-carte : etang.png, 0.7, 0.7, 10 
-fleche : depart, fleche1, 0.5, 0.5, 190
-decor : fantome, fantome, 0.3, 0.3, 0, 1.5
-musique : stop

@@ -43,7 +43,9 @@ void preparerMenu() {
 void chargerScene(Scene* _scene) {
 	if (_scene != scene) {
 		scene = _scene;
-		image.loadFromFile("ressources/images/scenes/"+scene->getNom()+".png");
+		if(not image.loadFromFile("ressources/images/scenes/" + scene->getNom() + ".jpg")) {
+			image.loadFromFile("ressources/images/scenes/" + scene->getNom() + ".png");
+		}
 		texture.loadFromImage(image);
 		sprite.setTexture(texture);
 		sf::Vector2f taille = sf::Vector2f(texture.getSize().x, texture.getSize().y);
@@ -103,7 +105,6 @@ void sauvegarder(std::string fichier) {
 	flux << scene->getNom() << std::endl;
 	flux<< scenes.size()<<std::endl;
 	for (int i = 0; i < scenes.size(); i++) {
-		flux << scenes[i]->getNom() << std::endl;
 		flux << scenes[i]->tailleFleches()+ scenes[i]->tailleRamassables() + scenes[i]->tailleDecors() << std::endl;
 		for (int j = 0; j < scenes[i]->tailleFleches(); j++) flux << scenes[i]->getDescription("fleche", j)<<std::endl;
 		for (int j = 0; j < scenes[i]->tailleRamassables(); j++) flux << scenes[i]->getDescription("ramassable", j) << std::endl;
@@ -113,7 +114,6 @@ void sauvegarder(std::string fichier) {
 
 void chargerSauvegarde(std::string fichier) {
 	int indexLigne, x, y;
-	std::string nomScene;
 	std::vector<std::string> lignes = lireFichier("sauvegardes/" + fichier + ".txt");
 	inventaire->setMonnaie(std::stoi(lignes[0]));
 	indexLigne = 1;
@@ -129,8 +129,12 @@ void chargerSauvegarde(std::string fichier) {
 	x = std::stoi(lignes[indexLigne]);
 	while (x > 0) {
 		indexLigne++;
-		nomScene = lignes[indexLigne];
-		executerLigne(lignes[indexLigne]);
+		y = std::stoi(lignes[indexLigne]);
+		while (y > 0) {
+			indexLigne++;
+			executerLigne(lignes[indexLigne]);
+			y--;
+		}
 		x--;
 	}
 }

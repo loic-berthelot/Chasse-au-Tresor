@@ -35,20 +35,14 @@ bool verifierCondition(std::string ligne) {
 }
 
 void executerLigne(std::string ligne) {
-	std::cout << ligne<<std::endl;
-	std::vector<std::vector<std::string>> mots;
-	std::string role, nomScene;
-	mots = lireLigne(ligne);
+	std::vector<std::vector<std::string>> mots = lireLigne(ligne);
+	std::string nomScene;
 	if (mots.size() > 0) {
 		nomScene = "";
 		if (mots[0][0][0] == '@') {
-			role = mots[0][1];
 			if (mots[0].size() >= 3) nomScene = mots[0][2];
 		}
-		else {
-			role = mots[0][0];
-			if (mots[0].size() >= 2) nomScene = mots[0][1];
-		}
+		else if (mots[0].size() >= 2) nomScene = mots[0][1];
 		if (nomScene != "") getScene(nomScene)->executerLigne(ligne, true);
 		else getScene("depart")->executerLigne(ligne, true);
 	}
@@ -153,13 +147,18 @@ void Scene::executerLigne(std::string ligne, bool remplir) {
 		positionCurseur = sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2]));
 		angleCurseur = std::stof(mots[1][3]);
 	}
-	else if (role == "retirer_decor") {
-		retirerDecor(mots[1][0]);
+	else if (role == "retirer_fleche") {
+		if (mots[1].size() == 1) retirerFleche(mots[0][1]);
+		else retirerFleche(mots[1][0], sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2])));
 	}
 	else if (role == "retirer_ramassable" or role == "retirer_monnaie") {
 		if (mots[1].size() == 1) retirerRamassable(mots[0][1]);
 		else retirerRamassable(mots[1][0], sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2])));
 	}
+	else if (role == "retirer_decor") {
+		if (mots[1].size() == 1) retirerDecor(mots[0][1]);
+		else retirerDecor(mots[1][0], sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2])));
+	}	
 	else if (role == "gagner_monnaie") {
 		inventaire->ajouterMonnaie(std::stoi(mots[1][0]));
 	}
@@ -231,25 +230,41 @@ void Scene::retirerRamassable(Ramassable* ramassable) {
 	}
 }
 
+void Scene::retirerFleche(std::string nom, sf::Vector2f position) {
+	for (int i = 0; i < fleches.size(); i++) {
+		if (fleches[i]->getNom() == nom) {
+			if (position.x == -1 or (position.x == fleches[i]->getPosition().y and position.x == fleches[i]->getPosition().y)) {
+				fleches.erase(fleches.begin() + i);
+				return;
+			}
+		}
+	}
+}
+
 void Scene::retirerRamassable(std::string nom, sf::Vector2f position) {
 	for (int i = 0; i < ramassables.size(); i++) {
 		if (ramassables[i]->getNom() == nom) {
-			if (position.x == -1 or (position.x == ramassables[i]->getPosition().y and position.x == ramassables[i]->getPosition().y)) ramassables.erase(ramassables.begin() + i);
+			if (position.x == -1 or (position.x == ramassables[i]->getPosition().y and position.x == ramassables[i]->getPosition().y)) {
+				ramassables.erase(ramassables.begin() + i);
+				return;
+			}
+		}
+	}
+}
+
+void Scene::retirerDecor(std::string nom, sf::Vector2f position) {
+	for (int i = 0; i < decors.size(); i++) {
+		if (decors[i]->getNom() == nom) {
+			if (position.x == -1 or (position.x == decors[i]->getPosition().y and position.x == decors[i]->getPosition().y)) {
+				decors.erase(decors.begin() + i);
+				return;
+			}
 		}
 	}
 }
 
 void Scene::ajouterDecor(Decor* decor) {
 	decors.push_back(decor);
-}
-
-void Scene::retirerDecor(std::string nom) {
-	for (int i = 0; i < decors.size(); i++) {
-		if (decors[i]->getNom() == nom) {
-			decors.erase(decors.begin() + i);
-			return;
-		}
-	}
 }
 
 void Scene::ajouterQuete(Quete* _quete) {
@@ -285,7 +300,7 @@ int Scene::tailleDecors() {
 }
 
 std::string Scene::getDescription(std::string type, int indice) {
-	if (type == "fleche") return fleches[indice]->getDescription();
-	if (type == "ramassable") return ramassables[indice]->getDescription();
-	if (type == "decor") return decors[indice]->getDescription();
+	if (type == "fleche") return "fleche, " + getNom()+" : "+fleches[indice]->getDescription();
+	if (type == "ramassable") return "ramassable, " + getNom() + " : " + ramassables[indice]->getDescription();
+	if (type == "decor") return "decor, " + getNom() + " : " + decors[indice]->getDescription();
 }

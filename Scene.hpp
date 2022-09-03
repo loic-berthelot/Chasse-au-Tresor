@@ -54,11 +54,12 @@ public:
 	std::string getNom();
 	void ajouterFleche(Fleche* fleche);
 	void ajouterRamassable(Ramassable* ramassable);
-	void retirerRamassable(Ramassable* ramassable);
-	void retirerRamassable(std::string nom, sf::Vector2f position = sf::Vector2f(-1,-1));
 	void ajouterDecor(Decor* decor);
-	void retirerDecor(std::string nom);
 	void ajouterQuete(Quete* _quete);
+	void retirerRamassable(Ramassable* ramassable);
+	void retirerFleche(std::string nom, sf::Vector2f position = sf::Vector2f(-1, -1));
+	void retirerRamassable(std::string nom, sf::Vector2f position = sf::Vector2f(-1, -1));
+	void retirerDecor(std::string nom, sf::Vector2f position = sf::Vector2f(-1, -1));
 	std::string getMusique();
 	sf::Vector2f getPositionCurseur();
 	float getAngleCurseur();

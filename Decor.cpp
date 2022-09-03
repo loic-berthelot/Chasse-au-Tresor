@@ -10,5 +10,5 @@ std::string Decor::getNom() {
 }
 
 std::string Decor::getDescription() {
-	return "decor : " + nom + ", " + nomQuete + ", " + std::to_string(position.x) + ", " + std::to_string(position.y) + ", " + std::to_string(rotation) + ", " + std::to_string(coefTaille);
+	return nom + ", " + nomQuete + ", " + std::to_string(position.x) + ", " + std::to_string(position.y) + ", " + std::to_string(rotation) + ", " + std::to_string(coefTaille);
 }

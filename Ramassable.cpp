@@ -12,5 +12,5 @@ bool Ramassable::estMonnaie() {
 }
 
 std::string Ramassable::getDescription() {
-	return "ramassable : " + nom + ", " + std::to_string(position.x) + ", " + std::to_string(position.y) + ", " + std::to_string(rotation) + ", " + std::to_string(coefTaille);
+	return nom + ", " + std::to_string(position.x) + ", " + std::to_string(position.y) + ", " + std::to_string(rotation) + ", " + std::to_string(coefTaille);
 }
