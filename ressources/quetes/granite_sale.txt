@@ -1,0 +1,2 @@
+texte : "De la saleté cache un mot secret ecrit sur ce rocher. // Il faudrait une potion pour le nettoyer.", 80, 120
+bouton : granite/nettoyer, texte1, 100, -50, Nettoyer

@@ -67,3 +67,27 @@ std::vector<std::vector<std::string>> lireLigne(std::string ligne) {
 	}
 	return mots;
 }
+
+std::string modifierChaine(std::string chaine, std::string motif_a, std::string motif_b) {
+	std::string chaine2 = "";
+	bool trouve;
+	for (int i = 0; i < chaine.size(); i++) {
+		trouve = true;
+		for (int j = 0; j < motif_a.size(); j++) {
+			if (i + j >= chaine.size()) {
+				trouve = false;
+				break;
+			}
+			if (chaine[i + j] != motif_a[j]) {
+				trouve = false;
+				break;
+			}
+		}
+		if (trouve) {
+			i += motif_a.size() - 1;
+			chaine2 += motif_b;
+		}
+		else chaine2 += chaine[i];
+	}
+	return chaine2;
+}

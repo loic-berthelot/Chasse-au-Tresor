@@ -19,9 +19,11 @@ sf::Vector2f echelle;
 Inventaire* inventaire;
 bool toucheEchapPressee = false;
 bool pleinEcran = true;
+bool parametresOuverts = false;
 int largeurInventaire;
 Progression* progression;
 std::vector<Scene*> scenes;
+std::vector<Quete*> quetes;
 sf::Music musique;
 Bouton* boutonSon;
 Bouton* boutonNouvellePartie;
@@ -35,10 +37,8 @@ Carte* carte;
 std::string modeJeu;
 sf::Text texte;
 sf::Font police;
+std::string numeroVersion = "0.1";
 
-void preparerMenu() {
-	modeJeu = "menu";
-}
 
 void chargerScene(Scene* _scene) {
 	if (_scene != scene) {
@@ -85,7 +85,7 @@ void initialisation() {
 
 	carte = new Carte();
 	clicFenetre = 0;
-	preparerMenu();
+	modeJeu = "menu";
 }
 
 void preparerScenes(bool remplir) {
@@ -94,6 +94,11 @@ void preparerScenes(bool remplir) {
 		nom = file.path().string();
 		nom = nom.substr(20, nom.size() - 24);
 		new Scene(nom, remplir);
+	}
+	for (const auto& file : std::filesystem::directory_iterator("./ressources/quetes")) {
+		nom = file.path().string();
+		nom = nom.substr(20, nom.size() - 24);
+		new Quete(nom);
 	}
 }
 
@@ -202,6 +207,11 @@ int main() {
 				fenetre.close();
 				return 0;
 			}
+			texte.setFillColor(sf::Color::White);
+			texte.setPosition(sf::Vector2f(10, hauteurFenetre-35));
+			texte.setCharacterSize(20);
+			texte.setString("Version : "+numeroVersion);
+			fenetre.draw(texte);
 		}
 		else if (modeJeu == "credits" or modeJeu == "aide") {
 			fenetre.clear(sf::Color(150, 50, 0));

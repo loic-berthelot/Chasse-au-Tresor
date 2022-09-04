@@ -1,0 +1,4 @@
+texte : "Halte la ! Je vous laisse passer si vous me battez a pierre papier ciseaux... //Attention, vous devrez payer 1 piece d'or pour chaque essai !", 80, 120
+bouton : ppc/pierre, texte1, 100, -50, pierre
+bouton : ppc/papier, texte1, 280, -50, papier
+bouton : ppc/pierre, texte1, 460, -50, ciseaux

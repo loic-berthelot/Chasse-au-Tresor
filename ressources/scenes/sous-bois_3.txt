@@ -1,3 +1,4 @@
-carte : etang.png, 0.5, 0.3, 0 
-fleche : sous-bois_2, fleche1, 0.5, 0.5, 20
-fleche : sous-bois_4, fleche1, 0.1, 0.4, -50
+carte : etang.png, 0.54, 0.45, 0 
+fleche : sous-bois_2, fleche1, 0.5, 0.2, -160
+fleche : clairiere_1, fleche1, 0.1, 0.4, -50
+fleche : sous-bois_4, fleche1, 0.75, 0.6, 45

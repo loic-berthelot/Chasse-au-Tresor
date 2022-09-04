@@ -4,6 +4,7 @@
 #include <iostream>
 
 class Scene;
+class Quete;
 
 class Progression {
 	std::vector<std::string> variables;

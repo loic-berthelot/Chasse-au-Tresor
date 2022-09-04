@@ -30,7 +30,7 @@ public:
 		sf::FloatRect dimensionsCurseur = curseur.getGlobalBounds();
 		curseur.setOrigin(sf::Vector2f(dimensionsCurseur.width / 2, dimensionsCurseur.height / 2));
 		positionCurseur = sf::Vector2f(0.5, 0.5);
-		angleCurseur = 30;
+		angleCurseur = 0;
 	}
 	void afficher(sf::RenderWindow* fenetre);
 };

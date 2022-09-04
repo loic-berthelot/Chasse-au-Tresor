@@ -1,0 +1,4 @@
+_monnaie : 1
+si : -1 : +1 : 0
+gagner_monnaie : -1
+ouvrir_quete : ppc_perdu

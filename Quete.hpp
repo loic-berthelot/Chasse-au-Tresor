@@ -30,7 +30,7 @@ public:
 			mots = lireLigne(lignes[i]);
 			role = mots[0][0];
 			if (role == "texte") {
-				imageTexte.setString(mots[1][0]);
+				imageTexte.setString(modifierChaine(mots[1][0], "/", "\n"));
 				imageTexte.setPosition(sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2])));
 				textes.push_back(imageTexte);
 			} else if (role == "saisie") {
@@ -50,8 +50,10 @@ public:
 		position = sf::Vector2f(50, 50);
 		sprite.setPosition(position);
 		sf::FloatRect dimensionsSprite = sprite.getGlobalBounds();
+		quetes.push_back(this);
 	}
 	void afficher(sf::RenderWindow * fenetre);
 	std::string interactionSouris(sf::Vector2i souris, bool clic, sf::Event* evenementTexte);
 	std::string getTexte(std::string _nom);
+	std::string getNom();
 };

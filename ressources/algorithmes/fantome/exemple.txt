@@ -1,7 +1,0 @@
-_monnaie : 5
-_ramassable : arc
-@ref1, _saisie : enigme_sorcier, Jonathan
-si_et : -3, 2, @ref1 : +1 : 0
-ajouter_fleche : tour, foret, fleche_normale, 0.85, 0.45, 50, 1
-ajouter_monnaie : -5
-fermer_quete

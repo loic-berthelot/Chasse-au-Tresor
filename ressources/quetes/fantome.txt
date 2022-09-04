@@ -1,3 +1,0 @@
-texte : "Il vous faut une lampe torche pour effrayer ce fantome.", 80, 120
-bouton : fantome/bouton_effrayer, texte1, 100, -50, "Effrayer le fantome"
-bouton : fantome/bouton_payer, texte2, 270, -50, "Payer"

@@ -36,7 +36,7 @@ void Objet::setPosition(sf::Vector2f _position) {
 }
 
 void Objet::afficher(sf::RenderWindow* fenetre) {
-	sprite.setPosition(sf::Vector2f(position.x * (largeurFenetre-largeurInventaire), position.y * hauteurFenetre));
+	sprite.setPosition(sf::Vector2f(position.x * (largeurFenetre-largeurInventaire), (1-position.y) * hauteurFenetre));
 	fenetre->draw(sprite);
 }
 

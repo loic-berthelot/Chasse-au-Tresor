@@ -33,3 +33,7 @@ std::string Quete::getTexte(std::string _nom) {
 	}
 	return "";
 }
+
+std::string Quete::getNom() {
+	return nom;
+}

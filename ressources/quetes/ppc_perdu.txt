@@ -1,0 +1,2 @@
+texte : "Perdu !", 80, 120
+bouton : ppc/retour, texte1, 100, -50, retour

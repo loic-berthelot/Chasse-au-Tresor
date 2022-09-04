@@ -1,3 +1,4 @@
-carte : etang.png, 0.5, 0.3, 0 
-fleche : sous-bois_4, fleche1, 0.5, 0.5, 20
-fleche : sous-bois_6, fleche1, 0.1, 0.4, -50
+carte : etang.png, 0.54, 0.47, 15 
+fleche : sous-bois_4, fleche1, 0.32, 0.12, 170
+fleche : sous-bois_6, fleche1, 0.2, 0.4, 0
+ramassable : cle fer, 0.45, 0.3, 0, 0.4

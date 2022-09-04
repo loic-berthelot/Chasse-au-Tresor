@@ -1,0 +1,6 @@
+_monnaie : 1
+si : -1 : +1 : 0
+gagner_monnaie : -1
+ouvrir_quete : ppc_gagne
+fleche, sous-bois_2 : sous-bois_3, fleche1, 0.6, 0.5, 30
+retirer_decor, sous-bois_2 : chevalier Loic

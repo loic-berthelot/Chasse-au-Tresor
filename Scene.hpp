@@ -11,6 +11,7 @@
 #include "Quete.hpp"
 
 Scene* getScene(std::string nom);
+Quete* getQuete(std::string nom);
 bool verifierCondition(std::string ligne);
 int calculerReference(std::vector<std::string> _lignes, int ligneActuelle, std::string deplacement);
 void executerLigne(std::string ligne);
@@ -55,7 +56,7 @@ public:
 	void ajouterFleche(Fleche* fleche);
 	void ajouterRamassable(Ramassable* ramassable);
 	void ajouterDecor(Decor* decor);
-	void ajouterQuete(Quete* _quete);
+	void changerQuete(Quete* _quete);
 	void retirerRamassable(Ramassable* ramassable);
 	void retirerFleche(std::string nom, sf::Vector2f position = sf::Vector2f(-1, -1));
 	void retirerRamassable(std::string nom, sf::Vector2f position = sf::Vector2f(-1, -1));

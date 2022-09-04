@@ -1,3 +1,3 @@
-carte : etang.png, 0.5, 0.3, 0 
-fleche : depart, fleche1, 0.3, 0.1, -150
-fleche : sous-bois_2, fleche1, 0.1, 0.4, 30
+carte : etang.png, 0.54, 0.43, 0 
+fleche : depart, fleche1, 0.3, 0.1, -160
+fleche : sous-bois_2, fleche1, 0.5, 0.5, 0

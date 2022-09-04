@@ -1,12 +1,20 @@
 #include "Scene.hpp"
 
 extern std::vector<Scene*> scenes;
+extern std::vector<Quete*> quetes;
 extern Inventaire* inventaire;
 extern Quete* quete = nullptr;
 
 Scene* getScene(std::string nom) {
 	for (int i = 0; i < scenes.size(); i++) {
 		if (scenes[i]->getNom() == nom) return scenes[i];
+	}
+	return nullptr;
+}
+
+Quete* getQuete(std::string nom) {
+	for (int i = 0; i < quetes.size(); i++) {
+		if (quetes[i]->getNom() == nom) return quetes[i];
 	}
 	return nullptr;
 }
@@ -107,15 +115,13 @@ void executerAlgorithme(std::string nom) {
 }
 
 void Scene::chargerFichier(std::string nom, bool remplir) {
+	musique = "";
+	carte = "";
 	std::vector<std::string> lignes = lireFichier("ressources/scenes/" + nom + ".txt");
-	for (int i = 0; i < lignes.size(); i++) {
-		executerLigne(lignes[i], remplir);
-	}
+	for (int i = 0; i < lignes.size(); i++) executerLigne(lignes[i], remplir);
 }
 
 void Scene::executerLigne(std::string ligne, bool remplir) {
-	musique = "";
-	carte = "";
 	std::vector<std::vector<std::string>> mots;
 	std::string role;
 	mots = lireLigne(ligne);
@@ -147,6 +153,9 @@ void Scene::executerLigne(std::string ligne, bool remplir) {
 		positionCurseur = sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2]));
 		angleCurseur = std::stof(mots[1][3]);
 	}
+	else if (role == "ouvrir_quete") {
+		quete = getQuete(mots[1][0]);
+	}
 	else if (role == "retirer_fleche") {
 		if (mots[1].size() == 1) retirerFleche(mots[0][1]);
 		else retirerFleche(mots[1][0], sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2])));
@@ -156,7 +165,7 @@ void Scene::executerLigne(std::string ligne, bool remplir) {
 		else retirerRamassable(mots[1][0], sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2])));
 	}
 	else if (role == "retirer_decor") {
-		if (mots[1].size() == 1) retirerDecor(mots[0][1]);
+		if (mots[1].size() == 1) retirerDecor(mots[1][0]);
 		else retirerDecor(mots[1][0], sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2])));
 	}	
 	else if (role == "gagner_monnaie") {
@@ -253,6 +262,7 @@ void Scene::retirerRamassable(std::string nom, sf::Vector2f position) {
 }
 
 void Scene::retirerDecor(std::string nom, sf::Vector2f position) {
+	std::cout << nom;
 	for (int i = 0; i < decors.size(); i++) {
 		if (decors[i]->getNom() == nom) {
 			if (position.x == -1 or (position.x == decors[i]->getPosition().y and position.x == decors[i]->getPosition().y)) {
@@ -267,7 +277,7 @@ void Scene::ajouterDecor(Decor* decor) {
 	decors.push_back(decor);
 }
 
-void Scene::ajouterQuete(Quete* _quete) {
+void Scene::changerQuete(Quete* _quete) {
 	quete = _quete;
 }
 
