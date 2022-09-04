@@ -1,0 +1,3 @@
+texte : "J'ai trouve une cle. Je ne sais pas quoi en faire. //Si vous savez ce qu'il y a ecrit sur le rocher plus loin, je vous la donne.", 80, 120
+saisie : romain_reponse, 330, 250, 500, 80
+bouton : romain/donner_cle, texte1, 100, -50, Proposer

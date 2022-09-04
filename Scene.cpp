@@ -175,7 +175,6 @@ void Scene::executerLigne(std::string ligne, bool remplir) {
 		inventaire->ajouterRamassable(new Ramassable(mots[1][0]));
 	}
 	else if (role == "retirer_inventaire") {
-		std::cout<<"ok"<<std::endl;
 		inventaire->retirerRamassable(mots[1][0]);
 	}
 }
@@ -262,7 +261,6 @@ void Scene::retirerRamassable(std::string nom, sf::Vector2f position) {
 }
 
 void Scene::retirerDecor(std::string nom, sf::Vector2f position) {
-	std::cout << nom;
 	for (int i = 0; i < decors.size(); i++) {
 		if (decors[i]->getNom() == nom) {
 			if (position.x == -1 or (position.x == decors[i]->getPosition().y and position.x == decors[i]->getPosition().y)) {

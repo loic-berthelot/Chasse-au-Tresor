@@ -54,7 +54,6 @@ void chargerScene(Scene* _scene) {
 		
 		if (scene->getMusique() == "stop") musique.stop();
 		else if (scene->getMusique() != "") {/// and musique.getStatus() == sf::Music::Playing) {
-			std::cout << scene->getMusique();
 			if(musique.openFromFile("ressources/sons/" + scene->getMusique())) musique.play();		
 		}
 		if (scene->getCarte() != "") {

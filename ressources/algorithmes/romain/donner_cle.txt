@@ -1,0 +1,7 @@
+_saisie : romain_reponse, GRANITE
+_saisie : romain_reponse, Granite
+_saisie : romain_reponse, granite
+si_ou : 1, 2, 3 : +1 : 0
+ajouter_inventaire : cle fer
+retirer_decor, sous-bois_6 : citoyen Loic
+fermer_quete

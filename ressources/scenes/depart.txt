@@ -4,3 +4,4 @@ monnaie : monnaie1, 0.3, 0.35
 monnaie : monnaie1, 0.33, 0.35
 monnaie : monnaie1, 0.3, 0.38
 monnaie : monnaie1, 0.33, 0.38
+musique : swan_lake.ogg

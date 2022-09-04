@@ -1,1 +1,2 @@
 texte : "Il y a marque GRANITE sur le rocher.", 80, 120
+bouton : fermer_quete, texte1, 100, -50, Continuer

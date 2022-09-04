@@ -1,1 +1,2 @@
 texte : "Bravo !", 80, 120
+bouton : fermer_quete, texte1, 100, -50, Continuer

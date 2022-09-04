@@ -1,0 +1,6 @@
+_ramassable : potion rouge
+si : -1 : +1 : 0
+retirer_decor, sous-bois_5 : rocher granite sale
+decor, sous-bois_5 : rocher granite propre, granite_propre, 0.5, 0.4
+ouvrir_quete : granite_propre
+retirer_inventaire : potion rouge
