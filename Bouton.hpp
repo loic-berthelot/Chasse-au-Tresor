@@ -10,7 +10,6 @@ protected:
 	std::string type;
 	std::string texte;
 	sf::Text imageTexte;
-	sf::Font police;
 	int etatClic;
 public:
 	Bouton() {}
@@ -25,7 +24,6 @@ public:
 		sprite.setTexture(texture);
 		sf::FloatRect dimensions = sprite.getGlobalBounds();
 		sprite.setOrigin(dimensions.width / 2, dimensions.height / 2);
-		police.loadFromFile("ressources/polices/arial_narrow_7.ttf");
 		imageTexte.setFont(police);
 		imageTexte.setString(texte);
 		imageTexte.setCharacterSize(1.1*dimensions.width / texte.length());

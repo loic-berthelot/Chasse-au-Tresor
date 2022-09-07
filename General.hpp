@@ -6,6 +6,9 @@ extern Progression* progression;
 extern std::vector<Scene*> scenes;
 extern std::vector<Quete*> quetes;
 extern std::string numeroVersion;
+extern sf::Font police;
+extern std::string erreurFichier;
+extern int erreurLigne;
 
 float norme(sf::Vector2f v);
 float distance(sf::Vector2f v1, sf::Vector2f v2);

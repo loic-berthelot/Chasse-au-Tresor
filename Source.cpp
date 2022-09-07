@@ -1,4 +1,3 @@
-#include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "Scene.hpp"
 #include "Fleche.hpp"
@@ -7,6 +6,7 @@
 #include "Decor.hpp"
 #include "Quete.hpp"
 #include "Carte.hpp"
+#include "PanneauErreur.hpp"
 #include <filesystem>
 
 int largeurFenetre, hauteurFenetre;
@@ -38,6 +38,9 @@ std::string modeJeu;
 sf::Text texte;
 sf::Font police;
 std::string numeroVersion = "0.1";
+std::string erreurType, erreurFichier;
+int erreurLigne;
+PanneauErreur* panneauErreur;
 
 
 void chargerScene(Scene* _scene) {
@@ -67,8 +70,8 @@ void initialisation() {
 	musique.setLoop(true);
 	progression = new Progression();
 	largeurInventaire = 250;
-	largeurFenetre = sf::VideoMode::getDesktopMode().width;
-	hauteurFenetre = sf::VideoMode::getDesktopMode().height;
+	largeurFenetre = sf::VideoMode::getDesktopMode().width;// -100;
+	hauteurFenetre = sf::VideoMode::getDesktopMode().height;// -100;
 	fenetre.create(sf::VideoMode(largeurFenetre, hauteurFenetre), "Chasse au Trésor", sf::Style::Fullscreen);
 	inventaire = new Inventaire(sf::Vector2f(largeurInventaire, hauteurFenetre));
 	police.loadFromFile("ressources/polices/arial_narrow_7.ttf");
@@ -85,6 +88,8 @@ void initialisation() {
 	carte = new Carte();
 	clicFenetre = 0;
 	modeJeu = "menu";
+	erreurType = "";
+	panneauErreur = new PanneauErreur(sf::Vector2f(largeurFenetre/2 - 250, hauteurFenetre / 2 - 100));
 }
 
 void preparerScenes(bool remplir) {
@@ -150,112 +155,121 @@ int main() {
 	sf::Event evenement;
 	sf::Event* evenementTexte;
 	while (true) {
-		evenementTexte = nullptr;
-		while (fenetre.pollEvent(evenement)) {
-			if (evenement.type == sf::Event::Closed) {
-				fenetre.close();
-				return 0;
-			}
-			if (evenement.type == sf::Event::KeyPressed) {
-				if (evenement.key.code == sf::Keyboard::Escape) {
-					if (not toucheEchapPressee) {
-						toucheEchapPressee = true;
-						if (pleinEcran) fenetre.create(sf::VideoMode(largeurFenetre, hauteurFenetre), "Chasse au Trésor");
-						else fenetre.create(sf::VideoMode(largeurFenetre, hauteurFenetre), "Chasse au Trésor", sf::Style::Fullscreen);
-						pleinEcran = not pleinEcran;
+		try {
+			evenementTexte = nullptr;
+			while (fenetre.pollEvent(evenement)) {
+				if (evenement.type == sf::Event::Closed) {
+					fenetre.close();
+					return 0;
+				}
+				if (evenement.type == sf::Event::KeyPressed) {
+					if (evenement.key.code == sf::Keyboard::Escape) {
+						if (not toucheEchapPressee) {
+							toucheEchapPressee = true;
+							if (pleinEcran) fenetre.create(sf::VideoMode(largeurFenetre, hauteurFenetre), "Chasse au Trésor");
+							else fenetre.create(sf::VideoMode(largeurFenetre, hauteurFenetre), "Chasse au Trésor", sf::Style::Fullscreen);
+							pleinEcran = not pleinEcran;
+						}
+					}
+					else if (evenement.key.code == sf::Keyboard::S) {
+						sauvegarder("sauvegarde1");
+					}
+					else if (evenement.key.code == sf::Keyboard::X) {
+						panneauErreur->fermer();
 					}
 				}
-				else if (evenement.key.code == sf::Keyboard::S) {
-					sauvegarder("sauvegarde1");
+				if (evenement.type == sf::Event::KeyReleased) {
+					if (evenement.key.code == sf::Keyboard::Escape) toucheEchapPressee = false;
 				}
-			} 
-			if (evenement.type == sf::Event::KeyReleased) {
-				if (evenement.key.code == sf::Keyboard::Escape) toucheEchapPressee = false;
+				if (evenement.type == sf::Event::TextEntered) evenementTexte = &evenement;
 			}
-			if (evenement.type == sf::Event::TextEntered) evenementTexte = &evenement;
-		}
-		sf::Vector2i souris = sf::Mouse::getPosition(fenetre);
-		bool clic = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
-		progressionEtatsClic(clicFenetre, clic, true);
-		
-		if (modeJeu == "menu") {
-			fenetre.clear(sf::Color(150, 50, 0));
-			boutonNouvellePartie->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2 - 300));
-			boutonChargerPartie->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2 - 150));
-			boutonCredits->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2));
-			boutonAide->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2 + 150));
-			boutonQuitter->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2 + 300));
-			if (boutonNouvellePartie->interactionSouris(souris, clic)) {
-				preparerScenes(true);
-				chargerScene(getScene("depart"));				
-				modeJeu = "jeu";
-			}
-			if (boutonChargerPartie->interactionSouris(souris, clic)) {
-				preparerScenes(false);
-				chargerScene(getScene("depart"));
-				chargerSauvegarde("sauvegarde1");
-				modeJeu = "jeu";
-			}
-			if (boutonCredits->interactionSouris(souris, clic)) {
-				modeJeu = "credits";
-			}
-			if (boutonAide->interactionSouris(souris, clic)) {
-				modeJeu = "aide";
-			}
-			if (boutonQuitter->interactionSouris(souris, clic)) {
-				fenetre.close();
-				return 0;
-			}
-			texte.setFillColor(sf::Color::White);
-			texte.setPosition(sf::Vector2f(10, hauteurFenetre-35));
-			texte.setCharacterSize(20);
-			texte.setString("Version : "+numeroVersion);
-			fenetre.draw(texte);
-		}
-		else if (modeJeu == "credits" or modeJeu == "aide") {
-			fenetre.clear(sf::Color(150, 50, 0));
-			boutonRetourMenu->afficher(&fenetre, sf::Vector2f(50, 50));
-			if (boutonRetourMenu->interactionSouris(souris, clic)) modeJeu = "menu";
-			texte.setFillColor(sf::Color::White);
-			texte.setPosition(sf::Vector2f(80, 80));
-			texte.setCharacterSize(35);
-			if (modeJeu == "credits") {
-				texte.setString("Code : Loïc Berthelot");
-				fenetre.draw(texte);
-				texte.setCharacterSize(28);
-				texte.setPosition(sf::Vector2f(80, 180));
-				std::string contenuTexte = "";
-				std::vector<std::string> lignes = lireFichier("ressources/credits.txt");
-				for (int i = 0; i < lignes.size(); i++) contenuTexte += lignes[i]+"\n";
-				texte.setString(contenuTexte);
+			sf::Vector2i souris = sf::Mouse::getPosition(fenetre);
+			bool clic = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+			progressionEtatsClic(clicFenetre, clic, true);
+
+			if (modeJeu == "menu") {
+				fenetre.clear(sf::Color(150, 50, 0));
+				boutonNouvellePartie->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2 - 300));
+				boutonChargerPartie->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2 - 150));
+				boutonCredits->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2));
+				boutonAide->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2 + 150));
+				boutonQuitter->afficher(&fenetre, sf::Vector2f(largeurFenetre / 2, hauteurFenetre / 2 + 300));
+				if (boutonNouvellePartie->interactionSouris(souris, clic)) {
+					preparerScenes(true);
+					chargerScene(getScene("depart"));
+					modeJeu = "jeu";
+				}
+				if (boutonChargerPartie->interactionSouris(souris, clic)) {
+					preparerScenes(false);
+					chargerScene(getScene("depart"));
+					chargerSauvegarde("sauvegarde1");
+					modeJeu = "jeu";
+				}
+				if (boutonCredits->interactionSouris(souris, clic)) {
+					modeJeu = "credits";
+				}
+				if (boutonAide->interactionSouris(souris, clic)) {
+					modeJeu = "aide";
+				}
+				if (boutonQuitter->interactionSouris(souris, clic)) {
+					fenetre.close();
+					return 0;
+				}
+				texte.setFillColor(sf::Color::White);
+				texte.setPosition(sf::Vector2f(10, hauteurFenetre - 35));
+				texte.setCharacterSize(20);
+				texte.setString("Version : " + numeroVersion);
 				fenetre.draw(texte);
 			}
-			else {
-				texte.setString("Les instructions pour creer le jeu se trouvent dans le fichier lisez-moi.odt \ndans le dossier ressources.");
-				fenetre.draw(texte);
-			}
-		}
-		else if (modeJeu == "jeu") {
-			fenetre.clear();
-			fenetre.draw(sprite);
-			Scene* _scene = scene->interactionContenu(souris, clic, inventaire, evenementTexte);
-			chargerScene(_scene);
-			scene->afficherContenu(&fenetre, echelle);
-			inventaire->afficher(&fenetre, sf::Vector2f(largeurFenetre - largeurInventaire, 0));
-			boutonSon->afficher(&fenetre, sf::Vector2f(0, 0));
-			if (boutonSon->interactionSouris(souris, clic)) {
-				if (boutonSon->getType() == "sonOn") {
-					boutonSon->changerType("sonOff");
-					musique.setVolume(0);
+			else if (modeJeu == "credits" or modeJeu == "aide") {
+				fenetre.clear(sf::Color(150, 50, 0));
+				boutonRetourMenu->afficher(&fenetre, sf::Vector2f(50, 50));
+				if (boutonRetourMenu->interactionSouris(souris, clic)) modeJeu = "menu";
+				texte.setFillColor(sf::Color::White);
+				texte.setPosition(sf::Vector2f(80, 80));
+				texte.setCharacterSize(35);
+				if (modeJeu == "credits") {
+					texte.setString("Code : Loïc Berthelot");
+					fenetre.draw(texte);
+					texte.setCharacterSize(28);
+					texte.setPosition(sf::Vector2f(80, 180));
+					std::string contenuTexte = "";
+					std::vector<std::string> lignes = lireFichier("ressources/credits.txt");
+					for (int i = 0; i < lignes.size(); i++) contenuTexte += lignes[i] + "\n";
+					texte.setString(contenuTexte);
+					fenetre.draw(texte);
 				}
 				else {
-					boutonSon->changerType("sonOn");
-					musique.setVolume(100);
+					texte.setString("Les instructions pour creer le jeu se trouvent dans le fichier lisez-moi.odt \ndans le dossier ressources.");
+					fenetre.draw(texte);
 				}
 			}
-			carte->afficher(&fenetre);
+			else if (modeJeu == "jeu") {
+				fenetre.clear();
+				fenetre.draw(sprite);
+				Scene* _scene = scene->interactionContenu(souris, clic, inventaire, evenementTexte);
+				chargerScene(_scene);
+				scene->afficherContenu(&fenetre, echelle);
+				inventaire->afficher(&fenetre, sf::Vector2f(largeurFenetre - largeurInventaire, 0));
+				boutonSon->afficher(&fenetre, sf::Vector2f(0, 0));
+				if (boutonSon->interactionSouris(souris, clic)) {
+					if (boutonSon->getType() == "sonOn") {
+						boutonSon->changerType("sonOff");
+						musique.setVolume(0);
+					}
+					else {
+						boutonSon->changerType("sonOn");
+						musique.setVolume(100);
+					}
+				}
+				carte->afficher(&fenetre);
+			}
+			panneauErreur->afficher(&fenetre);
+			fenetre.display();
 		}
-		fenetre.display();
+		catch (std::exception e) {
+			panneauErreur->changerTexte((std::string)e.what() + "\n"+erreurFichier+"\nLigne : "+std::to_string(erreurLigne+1) + "\n\n\nFermer : touche X ");
+		}
 	}
 	return 0;
 }

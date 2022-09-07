@@ -12,6 +12,7 @@
 
 Scene* getScene(std::string nom);
 Quete* getQuete(std::string nom);
+void existenceParametres(std::vector<std::vector<std::string>> mots, int bloc, int nombreParametres);
 bool verifierCondition(std::string ligne);
 int calculerReference(std::vector<std::string> _lignes, int ligneActuelle, std::string deplacement);
 void executerLigne(std::string ligne);
