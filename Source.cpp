@@ -25,13 +25,17 @@ Progression* progression;
 std::vector<Scene*> scenes;
 std::vector<Quete*> quetes;
 sf::Music musique;
-Bouton* boutonSon;
 Bouton* boutonNouvellePartie;
 Bouton* boutonChargerPartie;
 Bouton* boutonCredits;
 Bouton* boutonAide;
 Bouton* boutonQuitter;
 Bouton* boutonRetourMenu;
+Bouton* boutonJeuParametres;
+Bouton* boutonPleinEcran;
+Bouton* boutonSon;
+Bouton* boutonSauvegarder;
+Bouton* boutonJeuQuitter;
 int clicFenetre;
 Carte* carte;
 std::string modeJeu;
@@ -41,6 +45,7 @@ std::string numeroVersion = "0.1";
 std::string erreurType, erreurFichier;
 int erreurLigne;
 PanneauErreur* panneauErreur;
+sf::RectangleShape fondParametres;
 
 
 void chargerScene(Scene* _scene) {
@@ -76,15 +81,20 @@ void initialisation() {
 	inventaire = new Inventaire(sf::Vector2f(largeurInventaire, hauteurFenetre));
 	police.loadFromFile("ressources/polices/arial_narrow_7.ttf");
 	texte.setFont(police);
-
-	boutonSon = new Bouton("son", "sonOn", sf::Vector2f(30, 30));
+	
 	boutonNouvellePartie = new Bouton("menu_nouvelle_partie", "menu_nouvelle_partie", sf::Vector2f(0, 0));
 	boutonChargerPartie = new Bouton("menu_charger_partie", "menu_charger_partie", sf::Vector2f(0, 0));
 	boutonCredits = new Bouton("menu_credits", "menu_credits", sf::Vector2f(0, 0));
 	boutonAide = new Bouton("menu_aide", "menu_aide", sf::Vector2f(0, 0));
 	boutonQuitter = new Bouton("menu_quitter", "menu_quitter", sf::Vector2f(0, 0));
 	boutonRetourMenu = new Bouton("retour_menu", "retour_menu", sf::Vector2f(0, 0));
-
+	boutonJeuParametres = new Bouton("jeuParametres", "parametres", sf::Vector2f(35, 35));
+	boutonPleinEcran = new Bouton("plein_ecran", "boutonJeu", sf::Vector2f(85, 150), "Plein Ecran");
+	boutonSon = new Bouton("son", "boutonJeu", sf::Vector2f(85, 210), "Son : On");
+	boutonSauvegarder = new Bouton("sauvegarder", "boutonJeu", sf::Vector2f(85, 270), "Sauvegarder");
+	boutonJeuQuitter = new Bouton("jeuQuitter", "boutonJeu", sf::Vector2f(85, 330), "Quitter");
+	fondParametres.setFillColor(sf::Color(100, 100, 100));
+	fondParametres.setSize(sf::Vector2f(200, 400));
 	carte = new Carte();
 	clicFenetre = 0;
 	modeJeu = "menu";
@@ -171,9 +181,6 @@ int main() {
 							pleinEcran = not pleinEcran;
 						}
 					}
-					else if (evenement.key.code == sf::Keyboard::S) {
-						sauvegarder("sauvegarde1");
-					}
 					else if (evenement.key.code == sf::Keyboard::X) {
 						panneauErreur->fermer();
 					}
@@ -251,17 +258,37 @@ int main() {
 				chargerScene(_scene);
 				scene->afficherContenu(&fenetre, echelle);
 				inventaire->afficher(&fenetre, sf::Vector2f(largeurFenetre - largeurInventaire, 0));
-				boutonSon->afficher(&fenetre, sf::Vector2f(0, 0));
-				if (boutonSon->interactionSouris(souris, clic)) {
-					if (boutonSon->getType() == "sonOn") {
-						boutonSon->changerType("sonOff");
-						musique.setVolume(0);
+				if (boutonJeuParametres->interactionSouris(souris, clic)) parametresOuverts = not parametresOuverts;
+				if (parametresOuverts) {
+					fenetre.draw(fondParametres);
+					boutonPleinEcran->afficher(&fenetre, sf::Vector2f(0, 0));
+					boutonSon->afficher(&fenetre, sf::Vector2f(0, 0));
+					boutonSauvegarder->afficher(&fenetre, sf::Vector2f(0, 0));
+					boutonJeuQuitter->afficher(&fenetre, sf::Vector2f(0, 0));
+					if (boutonPleinEcran->interactionSouris(souris, clic)) {
+						if (pleinEcran) fenetre.create(sf::VideoMode(largeurFenetre, hauteurFenetre), "Chasse au Trésor");
+						else fenetre.create(sf::VideoMode(largeurFenetre, hauteurFenetre), "Chasse au Trésor", sf::Style::Fullscreen);
+						pleinEcran = not pleinEcran;
 					}
-					else {
-						boutonSon->changerType("sonOn");
-						musique.setVolume(100);
+					if (boutonSon->interactionSouris(souris, clic)) {
+						if (boutonSon->getTexte() == "Son : On") {
+							boutonSon->changerTexte("Son : Off");
+							musique.setVolume(0);
+						}
+						else {
+							boutonSon->changerTexte("Son : On");
+							musique.setVolume(100);
+						}
+					}
+					if (boutonSauvegarder->interactionSouris(souris, clic)) {
+						sauvegarder("sauvegarde1");
+					}
+					if (boutonJeuQuitter->interactionSouris(souris, clic)) {
+						fenetre.close();
+						return 0;
 					}
 				}
+				boutonJeuParametres->afficher(&fenetre, sf::Vector2f(0, 0));
 				carte->afficher(&fenetre);
 			}
 			panneauErreur->afficher(&fenetre);

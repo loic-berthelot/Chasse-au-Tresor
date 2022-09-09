@@ -1,11 +1,13 @@
 2
-0
-sous-bois_6
+1
+potion rouge
+sous-bois_3
 8
 1
 fleche, clairiere_1 : sous-bois_3, fleche1, 0.500000, 0.600000, 20.000000, 1.000000
-1
+2
 fleche, depart : sous-bois_1, fleche1, 0.500000, 0.500000, -20.000000, 1.000000
+ramassable, depart : monnaie1, 0.300000, 0.350000, 0.000000, 1.000000
 2
 fleche, sous-bois_1 : depart, fleche1, 0.300000, 0.100000, -160.000000, 1.000000
 fleche, sous-bois_1 : sous-bois_2, fleche1, 0.500000, 0.500000, 0.000000, 1.000000
@@ -22,7 +24,7 @@ fleche, sous-bois_4 : sous-bois_5, fleche1, 0.220000, 0.400000, 0.000000, 1.0000
 3
 fleche, sous-bois_5 : sous-bois_4, fleche1, 0.320000, 0.120000, 170.000000, 1.000000
 fleche, sous-bois_5 : sous-bois_6, fleche1, 0.200000, 0.400000, 0.000000, 1.000000
-decor, sous-bois_5 : rocher granite propre, granite_propre, 0.500000, 0.400000, 0.000000, 1.000000
+decor, sous-bois_5 : rocher granite sale, granite_sale, 0.500000, 0.400000, 0.000000, 1.000000
 2
 fleche, sous-bois_6 : sous-bois_5, fleche1, 0.600000, 0.150000, -170.000000, 1.000000
 decor, sous-bois_6 : citoyen Loic, romain_cle, 0.300000, 0.600000, 0.000000, 0.400000
