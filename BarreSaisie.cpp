@@ -1,6 +1,7 @@
 #include "BarreSaisie.hpp"
 
 void BarreSaisie::reagirEntree(sf::Event* evenement){
+	changerTexte(progression->getValeur(nom));
 	if (not selectionne) return;
 	if (evenement == nullptr) return;
 	std::string _texte = texte;

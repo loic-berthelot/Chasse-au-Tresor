@@ -124,6 +124,7 @@ void executerAlgorithme(std::string nom) {
 void Scene::chargerFichier(std::string nom, bool remplir) {
 	musique = "";
 	carte = "";
+	arrivee = false;
 	std::vector<std::string> lignes = lireFichier("ressources/scenes/" + nom + ".txt");
 	for (int i = 0; i < lignes.size(); i++) {
 		erreurLigne = i;
@@ -174,6 +175,9 @@ void Scene::executerLigne(std::string ligne, bool remplir) {
 		carte = mots[1][0];
 		positionCurseur = sf::Vector2f(std::stof(mots[1][1]), std::stof(mots[1][2]));
 		angleCurseur = std::stof(mots[1][3]);
+	}
+	else if (role == "arrivee") {
+		arrivee = true;
 	}
 	else if (role == "ouvrir_quete") {
 		existenceParametres(mots, 1, 1);
@@ -344,4 +348,8 @@ std::string Scene::getDescription(std::string type, int indice) {
 	if (type == "fleche") return "fleche, " + getNom()+" : "+fleches[indice]->getDescription();
 	if (type == "ramassable") return "ramassable, " + getNom() + " : " + ramassables[indice]->getDescription();
 	if (type == "decor") return "decor, " + getNom() + " : " + decors[indice]->getDescription();
+}
+
+bool Scene::estArrivee() {
+	return arrivee;
 }

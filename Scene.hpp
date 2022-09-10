@@ -31,6 +31,7 @@ class Scene {
 	std::string carte;
 	sf::Vector2f positionCurseur;
 	float angleCurseur;
+	bool arrivee;
 public:
 	void executerLigne(std::string ligne, bool remplir);
 	void chargerFichier(std::string nom, bool remplir);
@@ -70,4 +71,5 @@ public:
 	int tailleRamassables();
 	int tailleDecors();
 	std::string getDescription(std::string type, int indice);
+	bool estArrivee();
 };
