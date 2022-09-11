@@ -9,6 +9,7 @@ protected:
 	float rayon, coefTaille, rotation;
 	std::string nom;
 	int etatClic = 0;
+	sf::Vector2f proportions = sf::Vector2f(1, 1);
 public:
 	Objet() {}
 	void creerSprite(std::string adresse);
@@ -21,4 +22,5 @@ public:
 	std::string getNom();
 	sf::Vector2f getPosition();
 	sf::Sprite retournerSprite();
+	void redimensionner(sf::Vector2f _proportions);
 };

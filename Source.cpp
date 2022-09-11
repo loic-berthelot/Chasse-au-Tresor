@@ -42,7 +42,7 @@ Carte* carte;
 std::string modeJeu;
 sf::Text texte;
 sf::Font police;
-std::string numeroVersion = "0.1";
+std::string numeroVersion = "0.2";
 std::string erreurType, erreurFichier;
 int erreurLigne;
 PanneauErreur* panneauErreur;
@@ -67,10 +67,11 @@ void chargerScene(Scene* _scene) {
 		sprite.setTexture(texture);
 		sf::Vector2f taille = sf::Vector2f(texture.getSize().x, texture.getSize().y);
 		echelle = sf::Vector2f((largeurFenetre-largeurInventaire)/taille.x, hauteurFenetre/taille.y);
+		scene->setEchelle(echelle);
 		sprite.setScale(echelle.x, echelle.y);
 		
 		if (scene->getMusique() == "stop") musique.stop();
-		else if (scene->getMusique() != "" and musique.getStatus() == sf::Music::Playing) {
+		else if (scene->getMusique() != "" and musique.getStatus() != sf::Music::Playing) {
 			if(musique.openFromFile("ressources/sons/" + scene->getMusique())) musique.play();		
 		}
 		if (scene->getCarte() != "") {

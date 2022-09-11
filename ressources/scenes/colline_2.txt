@@ -1,0 +1,4 @@
+carte : etang.png, 0.57, 0.48, 15 
+fleche : colline_1, fleche1, 0.5, 0.15, -170
+fleche : colline_3, fleche1, 0.75, 0.6, 30
+fleche : premier pont_2, fleche1, 0.4, 0.3, -30

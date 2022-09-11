@@ -1,0 +1,10 @@
+Version 0.2 :
+- Ajout d'un écran d'erreur. Le jeu ne crash plus lorsqu'une instruction invalide est lue dans un fichier du dossier ressources, mais indique la position de l'erreur.
+- Ajout de paramètres dans l'écran de jeu : Plein écran, Son on/off, Sauvegarder, Quitter
+- Ajout d'un panneau victoire qui apparait lorsque le joueur atteint une scène comportant l'instruction "arrivee"
+- Le fichier ressources/parametres.txt est maitenant utilisable
+- Résolution de quelques bugs mineurs
+- Ajout de quelques scènes supplémentaires
+
+A venir :
+version 0.3 : ajout d'un éditeur de scènes

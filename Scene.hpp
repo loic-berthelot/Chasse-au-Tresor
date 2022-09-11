@@ -30,6 +30,7 @@ class Scene {
 	std::string musique;
 	std::string carte;
 	sf::Vector2f positionCurseur;
+	sf::Vector2f echelle;
 	float angleCurseur;
 	bool arrivee;
 public:
@@ -72,4 +73,5 @@ public:
 	int tailleDecors();
 	std::string getDescription(std::string type, int indice);
 	bool estArrivee();
+	void setEchelle(sf::Vector2f _echelle);
 };

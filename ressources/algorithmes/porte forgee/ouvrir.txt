@@ -1,0 +1,6 @@
+_ramassable : cle fer
+si : -1 : +1 : 0
+retirer_decor, colline_3 : porte forgee
+fleche, colline_3 : souterrain_1, fleche1, 0.6, 0.5, 90
+retirer_inventaire : cle fer
+fermer_quete

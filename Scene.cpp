@@ -219,7 +219,7 @@ void Scene::executerLigne(std::string ligne, bool remplir) {
 void Scene::afficherContenu(sf::RenderWindow* fenetre, sf::Vector2f echelle) {
 	for (int i = 0; i < fleches.size(); i++) fleches[i]->afficher(fenetre);
 	for (int i = 0; i < ramassables.size(); i++) ramassables[i]->afficher(fenetre);
-	for (int i = 0; i < decors.size(); i++)	decors[i]->afficher(fenetre);
+	for (int i = 0; i < decors.size(); i++) decors[i]->afficher(fenetre);
 	if (quete != nullptr) quete->afficher(fenetre);
 }
 
@@ -352,4 +352,9 @@ std::string Scene::getDescription(std::string type, int indice) {
 
 bool Scene::estArrivee() {
 	return arrivee;
+}
+
+void Scene::setEchelle(sf::Vector2f _echelle) {
+	echelle = _echelle;
+	for (int i = 0; i < decors.size(); i++) decors[i]->redimensionner(echelle);
 }

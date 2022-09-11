@@ -1,0 +1,2 @@
+texte : "Il vous faut une cle pour ouvrir cette porte.", 80, 120
+bouton : porte forgee/ouvrir, texte1, 100, -50, Ouvrir
